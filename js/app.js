@@ -1,3 +1,6 @@
+//X is left and right
+//y is up and down
+
 var iaeiy = iaeiy ||{}
 
 $(function(){
@@ -32,16 +35,24 @@ iaeiy.playerMovement = function (){
   for (var direction in keys) {
     if (!keys.hasOwnProperty(direction)) continue;
     if (direction == 37) {
-      $("#player").animate({left: "-=5"}, 0);                
+      if (iaeiy.player.x > 3){
+        $("#player").animate({left: "-=5"}, 0);
+      }                
     }
-    if (direction == 38) {
-      $("#player").animate({top: "-=5"}, 0);  
+    if (iaeiy.player.y > 3){
+      if (direction == 38) {
+        $("#player").animate({top: "-=5"}, 0);  
+      }
     }
-    if (direction == 39) {
-      $("#player").animate({left: "+=5"}, 0);  
+    if (iaeiy.player.x < 480){
+      if (direction == 39) {
+        $("#player").animate({left: "+=5"}, 0);  
+      }
     }
-    if (direction == 40) {
-      $("#player").animate({top: "+=5"}, 0);  
+    if (iaeiy.player.y < 580){
+      if (direction == 40) {
+        $("#player").animate({top: "+=5"}, 0);  
+      }
     }
   }
 
