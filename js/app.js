@@ -59,10 +59,10 @@ iaeiy.playerMovement = function() {
 }
 
 iaeiy.selfPlayArea = {
-  left: 3,
-  up: 3,
-  right: 480,
-  down: 580
+  left: 15,
+  up: 15,
+  right: 495,
+  down: 595,
 }
 
 
@@ -72,21 +72,22 @@ iaeiy.checkCollisions = function(){
   iaeiy.player.y = $("#player").position().top
 
   //updating enemy positions
-  $(iaeiy.enemiesCreated).each(function(){
-  iaeiy.enemy1.x = $("#enemy1").position().left
-  iaeiy.enemy1.y = $("#enemy1").position().top
+  $(iaeiy.enemiesCreated).each(function(index){
+    var enemyToCheck  = "#" + iaeiy.enemiesCreated[index].enemyName
+  iaeiy.enemiesCreated[index].x = $(enemyToCheck).position().left
+  iaeiy.enemiesCreated[index].y = $(enemyToCheck).position().top
   })
 
-  $(iaeiy.enemiesCreated).each(function(){
-  if (iaeiy.player.x < iaeiy.enemy1.x + iaeiy.enemy1.width &&
-   iaeiy.player.x + iaeiy.player.width > iaeiy.enemy1.x &&
-   iaeiy.player.y < iaeiy.enemy1.y + iaeiy.enemy1.height &&
-   iaeiy.player.height + iaeiy.player.y > iaeiy.enemy1.y){
+  //check collisions
+  $(iaeiy.enemiesCreated).each(function(index){
+  if (iaeiy.player.x < iaeiy.enemiesCreated[index].x + iaeiy.enemiesCreated[index].width &&
+   iaeiy.player.x + iaeiy.player.width > iaeiy.enemiesCreated[index].x &&
+   iaeiy.player.y < iaeiy.enemiesCreated[index].y + iaeiy.enemiesCreated[index].height &&
+   iaeiy.player.height + iaeiy.player.y > iaeiy.enemiesCreated[index].y){
     console.log('collision detected')  
     }
   })
 }
-
 
 iaeiy.player = {
   x: 40,
@@ -102,61 +103,71 @@ iaeiy.enemiesCreated =[]
 
 iaeiy.enemyCounter = 0
 
-iaeiy.enemy1 = {  
+iaeiy.enemyTest = {  
   x: 400,
   y: 400,
   width: 20,
-  height: 20
+  height: 20,
+  enemyName: "enemyTest"
 }
+
+iaeiy.enemiesCreated.push(iaeiy.enemyTest)
 
 iaeiy.Enemy = function (posX,posY,width,height){
   var enemyName = "enemy" + iaeiy.enemyCounter
   iaeiy.enemyCounter++;
-  $(".self_area").append("<div id=\"" + enemyName + "\" class=enemy style=\" height:" + height + "px; width:" + width + "px; left:" + posX + "px;  top :" + posY + "px\"></div>")
+  $(".self_area").append("<div id=\"" + enemyName + "\" class=enemy style=\" height:" + height + "px; width:" + width + "px; left:" + posX + "px;  top:" + posY + "px; position:fixed\"></div>")
   this.x = posX
   this.y = posY 
   this.width = width
   this.height = height
+  this.id = enemyName
   console.log(this)
   var enemyIdentifier = "\"#" + enemyName +"\"" 
 }
 
 function randomInt(max,min){
-  return Math.floor((Math.random * (max-min) + min) 
+  return Math.floor((Math.random() * (max-min+1) + min)) 
 }
 
 iaeiy.randomX = function(){
-  randomInt(iaeiy.selfPlayArea.right,iaeiy.selfPlayArea.left);
+  return randomInt(iaeiy.selfPlayArea.right,iaeiy.selfPlayArea.left);
 }
 iaeiy.randomY = function(){
-  randomInt(iaeiy.selfPlayArea.bottom,iaeiy.selfPlayArea.top)
+  return randomInt(iaeiy.selfPlayArea.down,iaeiy.selfPlayArea.up)
 }
 
 iaeiy.createEnemy = function(){
   XYorigin = randomInt(3,0);
   switch (XYorigin){
     case 0:
-    var xpos = randomX
-    var newEnemy = new iaeiy.Enemy(iaeiy.selfPlayArea.left + xpos,3,20,20)
+    var xpos = iaeiy.randomX()
+    var ypos = iaeiy.selfPlayArea.up -10
+    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20)
     iaeiy.enemiesCreated.push(newEnemy)
+    console.log("case0:top")
     break;
     case 1:
-    var ypos = randomY
-    var newEnemy = new iaeiy.Enemy(3, ypos ,20,20)
+    var xpos = iaeiy.randomX()
+    var ypos = iaeiy.selfPlayArea.down+40
+    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20)
     iaeiy.enemiesCreated.push(newEnemy)
+    console.log("case1:bottom")
     break;   
     case 2:
-    var ypos = randomY
-    var newEnemy = new iaeiy.Enemy(3, ypos ,20,20)
+    var ypos = iaeiy.randomY()
+    var xpos = iaeiy.selfPlayArea.left - 20
+    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20)
     iaeiy.enemiesCreated.push(newEnemy)
+    console.log("case2:left")
     break;
-
     case 3:
-    var ypos = randomY
-    var newEnemy = new iaeiy.Enemy(3, ypos ,20,20)
+    var ypos = iaeiy.randomY()
+    var xpos = iaeiy.selfPlayArea.right +30
+    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20)
     iaeiy.enemiesCreated.push(newEnemy)
+    console.log("case3:right")
     break;
-
     default:
     console.log("error in createEnemy")
   }
@@ -165,5 +176,6 @@ iaeiy.createEnemy = function(){
 //To test stuff
 $(function(){
   $("button").click(function(){
+    iaeiy.createEnemy()
   })
 })

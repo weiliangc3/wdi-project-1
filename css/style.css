@@ -3,8 +3,8 @@ body{
 }
 
 .self_area{
-  margin: 6px solid black;
-  border: 4px solid white;
+  margin: 10px solid black;
+  border: 5px solid white;
   position: fixed;
   left: 10px;
   top: 10px;
@@ -13,7 +13,7 @@ body{
 }
 
 #player {
-  position: relative;
+  position: fixed;
   left: 40px;
   top:  40px;
   background-color: lime;
@@ -23,12 +23,12 @@ body{
 
 .enemy {
   background-color: red;
-  position: relative;
+  position: fixed;
   width: 20px;
   height: 20px
 
 }
- #enemy1 {
+ #enemyTest {
   left : 400px;
   top: 400px;
   height:20px;
