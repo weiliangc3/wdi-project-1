@@ -14,8 +14,8 @@ body{
 
 #player {
   position: fixed;
-  left: 40px;
-  top:  40px;
+  left: 200px;
+  top:  200px;
   background-color: lime;
   height: 20px;
   width: 20px;
