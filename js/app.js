@@ -139,7 +139,9 @@ iaeiy.checkCollisions = function(){
   if (iaeiy.collisionThreshold < 0){
     iaeiy.lives--;
     iaeiy.collisionThreshold = 10;
-    console.log("life lost")
+
+    //life lost activations
+    $("#scoreboard").html("Faith in humanity: " + iaeiy.lives)
   }
 }
 
