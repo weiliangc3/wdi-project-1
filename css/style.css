@@ -25,12 +25,13 @@ font-weight: bold;
   height: 30px;
   position:absolute;
   top: 50%;
-  left: 40%;
+  left: 35%;
+  margin-left: 75px;
   cursor: pointer;
 }
 
 .self_area{
-  margin: 10px solid black;
+  margin: 10px;
   border: 5px solid #235399;
   border-radius: 3px;
   position: fixed;
@@ -38,6 +39,17 @@ font-weight: bold;
   top: 10px;
   width: 500px;
   height:600px;
+}
+
+.neek_area{
+  margin: 10px;
+  border: 5px solid #CCE322;
+  border-radius: 3px;
+  position: fixed;
+  left: 530px;
+  top: 200px;
+  width: 400px;
+  height: 410px;
 }
 
 #player {
@@ -83,6 +95,7 @@ font-weight: bold;
   width:105px;
   height:20px;
   cursor: pointer;
+  opacity: 0.2;
 }
 
 .karma{
@@ -90,4 +103,16 @@ font-weight: bold;
   position: fixed;
   width: 20px;
   height: 20px
+}
+
+.empathy{
+  background-color:#CCE322;
+  width: 60px;
+  height: 60px;
+}
+
+.selfishness{
+  background-color: #730600;
+  width: 60px;
+  height: 60px;
 }
