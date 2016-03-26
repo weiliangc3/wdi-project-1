@@ -1,12 +1,12 @@
 var iaeiy = iaeiy ||{}
 
 iaeiy.collisionThreshold = 0
-iaeiy.lives = 20
+iaeiy.lives = 3
 iaeiy.baseDamageDelay = 40
 iaeiy.baseCollisionThreshold = 3
 
 iaeiy.enemyCreationTimer=0
-iaeiy.levelTimer = 40000
+iaeiy.levelTimer = 10000
 iaeiy.levelDifficulty = 4
 iaeiy.levelSpawnTimer = 20
 
@@ -24,12 +24,13 @@ iaeiy.init = function(){
 }
 
 iaeiy.initButtons = function(){
- console.log("buttons initialised");
- setInterval(iaeiy.refreshFunction, 20)
- iaeiy.refreshFunction();
+ console.log("Game initialised");
+ iaeiy.refreshInterval = null;
+ iaeiy.refreshInterval = setInterval(iaeiy.refreshFunction, 20);
 }
 
 iaeiy.refreshFunction = function (){
+  console.log("refreshrunning")
   if (iaeiy.levelOn){
   iaeiy.playerMovement();
   iaeiy.moveEnemies();
@@ -149,15 +150,12 @@ iaeiy.checkCollisions = function(){
      iaeiy.player.y < iaeiy.enemiesCreated[index].y + iaeiy.enemiesCreated[index].height &&
      iaeiy.player.height + iaeiy.player.y > iaeiy.enemiesCreated[index].y){
       iaeiy.collisionThreshold = iaeiy.collisionThreshold - 2;
-    console.log("collision")
   } else if (iaeiy.enemiesCreated.length === (index+1) && iaeiy.collisionThreshold < iaeiy.baseCollisionThreshold){
-    console.log("regeneration active")
     iaeiy.collisionThreshold++
   }
 
   //decay threshold if above base
   if(iaeiy.collisionThreshold > iaeiy.baseCollisionThreshold){
-    console.log("decay active")
     iaeiy.collisionThreshold--
   }
 })
@@ -169,7 +167,7 @@ iaeiy.checkCollisions = function(){
 }
 
 iaeiy.purgeEnemies = function(){
-  $(iaeiy.enemiesCreated).each(function(index){
+  $($(iaeiy.enemiesCreated).get().reverse()).each(function(index){
     var enemyToCheck= "#" + iaeiy.enemiesCreated[index].enemyName
     if ((iaeiy.selfPlayArea.left-20 >iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].type==="right") ||
       (iaeiy.selfPlayArea.right+20 < iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].type==="left") ||
@@ -271,6 +269,7 @@ iaeiy.startLevel = function(diffic,spawntimer){
 
 iaeiy.updateBoard = function(){
   $("#patience").html(iaeiy.lives)
+  $("#game_timer").html(iaeiy.levelTimer)
 }
 
 iaeiy.endLevel = function(){
@@ -284,6 +283,7 @@ iaeiy.startGame = function(){
 }
 
 iaeiy.checkWinLose = function(){
+  iaeiy.levelTimer -=20;
   if(iaeiy.lives < 1){
     iaeiy.youLose();
   }
@@ -293,11 +293,23 @@ iaeiy.youLose = function(){
   $(".front").fadeIn(5000)
   $("title").html("breathe again")
   iaeiy.levelOn = false  
+  iaeiy.clearLevel();
 }
 
 iaeiy.loadLevel = function(){
-  iaeiy.levelTimer=40000
+  iaeiy.levelTimer=20000
+  iaeiy.lives=3
   iaeiy.levelOn=true
+}
+
+iaeiy.clearLevel = function(){
+  clearInterval(iaeiy.refreshInterval);
+  $($(iaeiy.enemiesCreated).get().reverse()).each(function(index){
+    var enemyToRemove= "#" + iaeiy.enemiesCreated[index].enemyName
+    $(enemyToRemove).remove();
+    iaeiy.enemiesCreated.splice(index,1);
+  })
+
 }
 
 //To test stuff
