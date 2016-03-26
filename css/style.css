@@ -32,6 +32,7 @@ font-weight: bold;
 .self_area{
   margin: 10px solid black;
   border: 5px solid #235399;
+  border-radius: 3px;
   position: fixed;
   left: 10px;
   top: 10px;
@@ -82,4 +83,11 @@ font-weight: bold;
   width:105px;
   height:20px;
   cursor: pointer;
+}
+
+.karma{
+  background-color: #CCE322;
+  position: fixed;
+  width: 20px;
+  height: 20px
 }

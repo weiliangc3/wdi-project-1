@@ -73,14 +73,15 @@ iaeiy.initButtons = function(){
 
 iaeiy.refreshFunction = function (){
   if (iaeiy.levelOn){
-  iaeiy.playerMovement();
-  iaeiy.moveEnemies();
-  iaeiy.checkCollisions();
-  iaeiy.purgeEnemies();
-  iaeiy.enemyCreation();
-  iaeiy.updateBoard();
-  iaeiy.checkWinLose();
-}
+    iaeiy.playerMovement();
+    iaeiy.moveEnemies();
+    iaeiy.moveKarma();
+    iaeiy.checkCollisions();
+    iaeiy.purgeEnemies();
+    iaeiy.enemyCreation();
+    iaeiy.updateBoard();
+    iaeiy.checkWinLose();
+  }
 }
 
 // Movement Functions (with restrictions)
@@ -130,9 +131,10 @@ iaeiy.selfPlayArea = {
   down: 595,
 }
 
+
 iaeiy.moveEnemies = function(){
   $(iaeiy.enemiesCreated).each(function (index){
-    var enemyName = "#" + iaeiy.enemiesCreated[index].enemyName
+    var enemyName = "#" + iaeiy.enemiesCreated[index].enemyName;
     switch (iaeiy.enemiesCreated[index].type){
       case "up":
       $(enemyName).animate({top: "+=" + iaeiy.enemiesCreated[index].difficulty}, 0);
@@ -170,17 +172,57 @@ iaeiy.moveEnemies = function(){
   })
 }
 
+iaeiy.moveKarma = function(){
+  $(iaeiy.karmaCreated).each(function (index){
+    var karmaName = "#" + iaeiy.karmaCreated[index].karmaName;
+    switch (iaeiy.karmaCreated[index].type){
+      case "up":
+      $(karmaName).animate({top: "+=3"}, 0);
+      break;
+      case "down":
+      $(karmaName).animate({top: "-=3"}, 0);
+      break;
+      case "left":
+      $(karmaName).animate({left: "+=3"}, 0);
+      break;
+      case "right":
+      $(karmaName).animate({left: "-=3"}, 0);
+      break;
+      case "wtf":
+      var lolol = randomInt(4,1)
+      switch (lolol){
+        case 1:
+        $(karmaName).animate({top: "-=5"}, 0);
+        break;
+        case 2:
+        $(karmaName).animate({top: "+=5"}, 0);
+        break;
+        case 3:
+        $(karmaName).animate({left: "-=5"}, 0);
+        break;
+        case 4:
+        $(karmaName).animate({left: "+=5"}, 0);
+        break;
+      }
+      break;
+      default:
+      console.log('karma movement error')
+      break;
+    }
+  })
+}
+
 iaeiy.checkCollisions = function(){
   //updating player positions
-  iaeiy.player.x = $("#player").position().left
-  iaeiy.player.y = $("#player").position().top
+  iaeiy.player.x = $("#player").position().left;
+  iaeiy.player.y = $("#player").position().top;
 
   //updating enemy positions
   $(iaeiy.enemiesCreated).each(function(index){
     var enemyToCheck = "#" + iaeiy.enemiesCreated[index].enemyName
     iaeiy.enemiesCreated[index].x = $(enemyToCheck).position().left
     iaeiy.enemiesCreated[index].y = $(enemyToCheck).position().top
-  })
+  });
 
   //check collisions
   $(iaeiy.enemiesCreated).each(function(index){
@@ -192,18 +234,32 @@ iaeiy.checkCollisions = function(){
   } else if (iaeiy.enemiesCreated.length === (index+1) && iaeiy.collisionThreshold < iaeiy.baseCollisionThreshold){
     iaeiy.collisionThreshold++
   }
+  });
 
   //decay threshold if above base
   if(iaeiy.collisionThreshold > iaeiy.baseCollisionThreshold){
     iaeiy.collisionThreshold--
   }
-})
+
+  //check good bullet collision
+  $(iaeiy.karmaCreated).each(function(index){
+    if (iaeiy.player.x < iaeiy.karmaCreated[index].x + iaeiy.karmaCreated[index].width &&
+     iaeiy.player.x + iaeiy.player.width > iaeiy.karmaCreated[index].x &&
+     iaeiy.player.y < iaeiy.karmaCreated[index].y + iaeiy.karmaCreated[index].height &&
+     iaeiy.player.height + iaeiy.player.y > iaeiy.karmaCreated[index].y){
+      var karmaToCheck= "#" + iaeiy.karmaCreated[index].enemyName;
+      console.log("karma collected");
+      $(karmaToCheck).remove();
+      iaeiy.karmaCreated.splice(index,1);
+    }
+  })
+
 
   if (iaeiy.collisionThreshold < 0){
     iaeiy.lives--;
     iaeiy.collisionThreshold = iaeiy.baseDamageDelay;
   }
-}
+};
 
 iaeiy.purgeEnemies = function(){
   $($(iaeiy.enemiesCreated).get().reverse()).each(function(index){
@@ -218,6 +274,19 @@ iaeiy.purgeEnemies = function(){
 })
 }
 
+iaeiy.purgeKarma = function(){
+  $($(iaeiy.karmaCreated).get().reverse()).each(function(index){
+    var enemyToCheck= "#" + iaeiy.karmaCreated[index].enemyName
+    if ((iaeiy.selfPlayArea.left-20 >iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].type==="right") ||
+      (iaeiy.selfPlayArea.right+20 < iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].type==="left") ||
+      (iaeiy.selfPlayArea.up-20 > iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].type==="down") ||
+      (iaeiy.selfPlayArea.down+20 < iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].type==="up")){
+      $(enemyToCheck).remove();
+    iaeiy.karmaCreated.splice(index,1);
+  }
+})
+}
+
 iaeiy.player = {
   x: 40,
   y: 40,
@@ -225,6 +294,7 @@ iaeiy.player = {
   height: 20
 }
 
+iaeiy.karmaCreated = []
 iaeiy.enemiesCreated =[]
 
 //For future use? Maybe?
@@ -243,7 +313,20 @@ iaeiy.Enemy = function (posX,posY,width,height,type,difficulty){
   this.enemyName = enemyName
   this.type = type
   this.difficulty = difficulty
-  var enemyIdentifier = "\"#" + enemyName +"\"" 
+}
+
+iaeiy.karmaCounter = 0
+
+iaeiy.Karma = function (posX,posY,type){
+  var karmaName = "karma" + iaeiy.karmaCounter
+  iaeiy.karmaCounter++;
+  $(".self_area").append("<div id=\"" + karmaName + "\" class=karma style=\" height:20px; width:20px; left:" + posX + "px;  top:" + posY + "px; position:fixed\"></div>")
+  this.x = posX
+  this.y = posY 
+  this.width = 20
+  this.height = 20
+  this.karmaName = karmaName
+  this.type = type 
 }
 
 iaeiy.randomX = function(){
@@ -286,6 +369,42 @@ iaeiy.createEnemy = function(difficulty){
     break;
     default:
     console.log("error in createEnemy")
+  }
+}
+
+iaeiy.createKarma = function(){
+  XYorigin = randomInt(3,0);
+  switch (XYorigin){
+    case 0:
+    var xpos = iaeiy.randomX()
+    var ypos = iaeiy.selfPlayArea.up - 20
+    var size = randomInt(iaeiy.levelMaxSize,20)
+    var newKarma = new iaeiy.Karma(xpos,ypos,"up")
+    iaeiy.karmaCreated.push(newKarma)
+    break;
+    case 1:
+    var xpos = iaeiy.randomX()
+    var ypos = iaeiy.selfPlayArea.down + 20
+    var size = randomInt(iaeiy.levelMaxSize,20)
+    var newKarma = new iaeiy.Karma(xpos,ypos,"down")
+    iaeiy.karmaCreated.push(newKarma)
+    break;   
+    case 2:
+    var ypos = iaeiy.randomY()
+    var xpos = iaeiy.selfPlayArea.left - 20
+    var size = randomInt(iaeiy.levelMaxSize,20)
+    var newKarma = new iaeiy.Karma(xpos,ypos,"left")
+    iaeiy.karmaCreated.push(newKarma)
+    break;
+    case 3:
+    var ypos = iaeiy.randomY()
+    var xpos = iaeiy.selfPlayArea.right + 20
+    var size = randomInt(iaeiy.levelMaxSize,20)
+    var newKarma = new iaeiy.Karma(xpos,ypos,"right")
+    iaeiy.karmaCreated.push(newKarma)
+    break;
+    default:
+    console.log("error in createKarma")
   }
 }
 
@@ -390,37 +509,37 @@ iaeiy.levelWin = function(){
 
   var buttonText = function(){
     switch(iaeiy.levelVal){
-    case 1:
-    return "breathe once"
-    break;
-    case 2:
-    return "breathe twice"
-    break;
-    case 3:
-    return "breathe deep"
-    break;
-    default:
-    return "again."
-  }}
-  $("#start_button").html(buttonText)
+      case 1:
+      return "breathe once"
+      break;
+      case 2:
+      return "breathe twice"
+      break;
+      case 3:
+      return "breathe deep"
+      break;
+      default:
+      return "again."
+    }}
+    $("#start_button").html(buttonText)
 
-  if (iaeiy.levelVal === 3){
-    $("#announcer").html("confidence brings completion. congratulations.")
+    if (iaeiy.levelVal === 4){
+      $("#announcer").html("confidence brings completion. congratulations.")
+    }
   }
-}
 
-iaeiy.updateLevel = function(i){
-  iaeiy.lives = iaeiy.levelSettings[i].lives;
-  iaeiy.levelTimer = iaeiy.levelSettings[i].timer;
-  iaeiy.levelDifficulty = iaeiy.levelSettings[i].difficulty;
-  iaeiy.levelSpawnTimer = iaeiy.levelSettings[i].spawnTimer;
-  iaeiy.levelMaxSize = iaeiy.levelSettings[i].maxSize
-}
+  iaeiy.updateLevel = function(i){
+    iaeiy.lives = iaeiy.levelSettings[i].lives;
+    iaeiy.levelTimer = iaeiy.levelSettings[i].timer;
+    iaeiy.levelDifficulty = iaeiy.levelSettings[i].difficulty;
+    iaeiy.levelSpawnTimer = iaeiy.levelSettings[i].spawnTimer;
+    iaeiy.levelMaxSize = iaeiy.levelSettings[i].maxSize
+  }
 
 //To test stuff
 $(function(){
   $("#button1").click(function(){
-    iaeiy.levelOn = true
+    iaeiy.createKarma();
   })
 })
 
