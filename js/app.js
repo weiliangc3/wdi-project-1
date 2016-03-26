@@ -31,7 +31,6 @@ iaeiy.initButtons = function(){
 }
 
 iaeiy.refreshFunction = function (){
-  console.log("refreshrunning")
   if (iaeiy.levelOn){
   iaeiy.playerMovement();
   iaeiy.moveEnemies();
@@ -279,6 +278,7 @@ iaeiy.endLevel = function(){
 
 iaeiy.startGame = function(){
   $(".front").fadeOut(1000)
+  $("#start_button").fadeOut(600)
   $("title").html("it all ends in you.")
   iaeiy.loadLevel();
 }
@@ -300,11 +300,10 @@ iaeiy.youLose = function(){
   $("title").html("breathe again")
   iaeiy.levelOn = false
 
-  //brute fix - probably should debug but fix will work
   setTimeout(function(){
-    clearInterval(iaeiy.purgeInterval)
-  },500)
-  iaeiy.purgeInterval = setInterval(iaeiy.clearLevel, 20)
+    $("#start_button").fadeIn(700)
+  },6000)
+
 }
 
 iaeiy.loadLevel = function(){
@@ -315,6 +314,13 @@ iaeiy.loadLevel = function(){
 
 iaeiy.clearLevel = function(){
   clearInterval(iaeiy.refreshInterval);
+  setTimeout(function(){
+    clearInterval(iaeiy.purgeInterval)
+  },1000)
+  iaeiy.purgeInterval = setInterval(iaeiy.clearEnemies, 50)
+}
+
+iaeiy.clearEnemies = function(){
   $($(iaeiy.enemiesCreated).get().reverse()).each(function(index){
     var enemyToRemove= "#" + iaeiy.enemiesCreated[index].enemyName
     $(enemyToRemove).remove();
@@ -324,7 +330,7 @@ iaeiy.clearLevel = function(){
 
 
 iaeiy.levelWin = function(){
-  
+  iaeiy.clearLevel;
 }
 
 //To test stuff
