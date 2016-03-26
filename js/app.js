@@ -6,11 +6,30 @@ iaeiy.baseCollisionThreshold = 3
 iaeiy.purgeInterval = null
 iaeiy.enemyCreationTimer=0
 
+iaeiy.levelVal = 0
 iaeiy.lives = 3
 iaeiy.levelTimer = 10000
 iaeiy.levelDifficulty = 4
 iaeiy.levelSpawnTimer = 20
 
+iaeiy.levelSettings = [
+{lives :5,
+  timer: 10000,
+  difficulty: 4,
+  spawnTimer: 20,
+},{lives :3,
+  timer: 10000,
+  difficulty: 4,
+  spawnTimer: 15,
+},{lives :2,
+  timer: 10000,
+  difficulty: 5,
+  spawnTimer: 10,
+},{lives :1,
+  timer: 60000,
+  difficulty: 6,
+  spawnTimer: 10,
+}]
 
 $(function(){
   $("#start_button").click(function(){
@@ -127,9 +146,6 @@ iaeiy.moveEnemies = function(){
     }
   })
 }
-
-
-
 
 iaeiy.checkCollisions = function(){
   //updating player positions
@@ -260,10 +276,10 @@ iaeiy.enemyCreation = function(){
   } 
 }
 
-iaeiy.startLevel = function(diffic,spawntimer){
+iaeiy.startLevel = function(diffic,spawnTimer){
   iaeiy.levelOn = true;
   iaeiy.levelDifficulty = diffic;
-  iaeiy.levelSpawnTimer = spawntimer;
+  iaeiy.levelSpawnTimer = spawnTimer;
   iaeiy.collisionThreshold = iaeiy.baseCollisionThreshold
 }
 
@@ -280,6 +296,7 @@ iaeiy.startGame = function(){
   $(".front").fadeOut(1000)
   $("#start_button").fadeOut(600)
   $("title").html("it all ends in you.")
+  iaeiy.updateLevel(iaeiy.levelVal)
   iaeiy.loadLevel();
 }
 
@@ -290,6 +307,7 @@ iaeiy.checkWinLose = function(){
     iaeiy.clearLevel();
   } else if (iaeiy.levelTimer < 0){
     iaeiy.levelWin();
+    iaeiy.clearLevel();
   }
 }
 
@@ -304,8 +322,8 @@ iaeiy.youLose = function(){
 }
 
 iaeiy.loadLevel = function(){
-  iaeiy.levelTimer=20000
-  iaeiy.lives=3
+  iaeiy.levelTimer=iaeiy.levelSettings[iaeiy.levelVal].timer
+  iaeiy.lives= iaeiy.levelSettings[iaeiy.levelVal].lives
   iaeiy.levelOn=true
 }
 
@@ -326,9 +344,37 @@ iaeiy.clearEnemies = function(){
   console.log("clearing")
 }
 
-
 iaeiy.levelWin = function(){
-  iaeiy.clearLevel;
+  iaeiy.levelVal++;
+  iaeiy.updateLevel(iaeiy.levelVal);
+
+  $(".front").fadeIn(2000)
+  $("title").html("breathe once more")
+  $("#start_button").fadeIn(1000)
+
+  var buttonText = function(){
+    switch(iaeiy.levelVal){
+    case 1:
+    return "breathe once"
+    break;
+    case 2:
+    return "breathe twice"
+    break;
+    case 3:
+    return "breathe deep"
+    break;
+    default:
+    return "button broked. :("
+  }}
+  $("#start_button").html(buttonText)
+
+}
+
+iaeiy.updateLevel = function(i){
+  iaeiy.lives = iaeiy.levelSettings[i].lives;
+  iaeiy.levelTimer = iaeiy.levelSettings[i].timer;
+  iaeiy.levelDifficulty = iaeiy.levelSettings[i].difficulty;
+  iaeiy.levelSpawnTimer = iaeiy.levelSettings[i].spawnTimer;
 }
 
 //To test stuff
