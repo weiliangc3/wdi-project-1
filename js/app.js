@@ -1,11 +1,12 @@
 var iaeiy = iaeiy ||{}
 
 iaeiy.collisionThreshold = 0
-iaeiy.lives = 3
 iaeiy.baseDamageDelay = 40
 iaeiy.baseCollisionThreshold = 3
-
+iaeiy.purgeInterval = null
 iaeiy.enemyCreationTimer=0
+
+iaeiy.lives = 3
 iaeiy.levelTimer = 10000
 iaeiy.levelDifficulty = 4
 iaeiy.levelSpawnTimer = 20
@@ -286,14 +287,24 @@ iaeiy.checkWinLose = function(){
   iaeiy.levelTimer -=20;
   if(iaeiy.lives < 1){
     iaeiy.youLose();
+    iaeiy.clearLevel();  
+    iaeiy.clearLevel();
+    iaeiy.clearLevel();
+  } else if (iaeiy.levelTimer < 0){
+    iaeiy.levelWin();
   }
 }
 
 iaeiy.youLose = function(){
   $(".front").fadeIn(5000)
   $("title").html("breathe again")
-  iaeiy.levelOn = false  
-  iaeiy.clearLevel();
+  iaeiy.levelOn = false
+
+  //brute fix - probably should debug but fix will work
+  setTimeout(function(){
+    clearInterval(iaeiy.purgeInterval)
+  },500)
+  iaeiy.purgeInterval = setInterval(iaeiy.clearLevel, 20)
 }
 
 iaeiy.loadLevel = function(){
@@ -309,7 +320,11 @@ iaeiy.clearLevel = function(){
     $(enemyToRemove).remove();
     iaeiy.enemiesCreated.splice(index,1);
   })
+}
 
+
+iaeiy.levelWin = function(){
+  
 }
 
 //To test stuff
