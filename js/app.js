@@ -1,5 +1,9 @@
 var iaeiy = iaeiy ||{}
 
+function randomInt(max,min){
+  return Math.floor((Math.random() * (max-min+1) + min)) 
+}
+
 iaeiy.collisionThreshold = 0
 iaeiy.baseDamageDelay = 40
 iaeiy.baseCollisionThreshold = 3
@@ -11,29 +15,47 @@ iaeiy.lives = 3
 iaeiy.levelTimer = 10000
 iaeiy.levelDifficulty = 4
 iaeiy.levelSpawnTimer = 20
+iaeiy.levelMaxSize = 20
 
 iaeiy.levelSettings = [
 {lives :5,
   timer: 10000,
   difficulty: 4,
   spawnTimer: 20,
+  maxSize: 20
 },{lives :3,
   timer: 10000,
   difficulty: 4,
   spawnTimer: 15,
+  maxSize: 40
 },{lives :2,
   timer: 10000,
   difficulty: 5,
   spawnTimer: 10,
+  maxSize: 50
 },{lives :1,
-  timer: 60000,
+  timer: 10000,
   difficulty: 6,
   spawnTimer: 10,
+  maxSize: 60
 }]
 
 $(function(){
   $("#start_button").click(function(){
     iaeiy.init();
+  })
+  $("#reset").click(function(){
+    iaeiy.levelVal = 0
+    iaeiy.lives = 3
+    iaeiy.levelTimer = 10000
+    iaeiy.levelDifficulty = 4
+    iaeiy.levelSpawnTimer = 20
+    iaeiy.levelMaxSize = 20
+    $("#start_button").fadeOut(1000)
+    setTimeout(function(){
+      $("#start_button").html("breathe in");
+      $("#start_button").fadeIn(1000)
+    },1000)
   })
 })
 
@@ -96,9 +118,10 @@ iaeiy.playerMovement = function() {
 }
 
 // maybe?
-// iaeiy.populatePlayArea = function(){
-//   iaeiy.selfPlayArea.left = $(".self_area").style.left
-// }
+iaeiy.populatePlayArea = function(){
+  iaeiy.selfPlayArea.left = $(".self_area",0).position().left +5
+  iaeiy.selfPlayArea.up = $(".self_area",0).position().up +5
+}
 
 iaeiy.selfPlayArea = {
   left: 15,
@@ -223,10 +246,6 @@ iaeiy.Enemy = function (posX,posY,width,height,type,difficulty){
   var enemyIdentifier = "\"#" + enemyName +"\"" 
 }
 
-function randomInt(max,min){
-  return Math.floor((Math.random() * (max-min+1) + min)) 
-}
-
 iaeiy.randomX = function(){
   return randomInt(iaeiy.selfPlayArea.right,iaeiy.selfPlayArea.left);
 }
@@ -240,25 +259,29 @@ iaeiy.createEnemy = function(difficulty){
     case 0:
     var xpos = iaeiy.randomX()
     var ypos = iaeiy.selfPlayArea.up - 20
-    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20,"up",difficulty)
+    var size = randomInt(iaeiy.levelMaxSize,20)
+    var newEnemy = new iaeiy.Enemy(xpos,ypos,size,size,"up",difficulty)
     iaeiy.enemiesCreated.push(newEnemy)
     break;
     case 1:
     var xpos = iaeiy.randomX()
     var ypos = iaeiy.selfPlayArea.down + 20
-    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20,"down",difficulty)
+    var size = randomInt(iaeiy.levelMaxSize,20)
+    var newEnemy = new iaeiy.Enemy(xpos,ypos,size,size,"down",difficulty)
     iaeiy.enemiesCreated.push(newEnemy)
     break;   
     case 2:
     var ypos = iaeiy.randomY()
     var xpos = iaeiy.selfPlayArea.left - 20
-    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20,"left",difficulty)
+    var size = randomInt(iaeiy.levelMaxSize,20)
+    var newEnemy = new iaeiy.Enemy(xpos,ypos,size,size,"left",difficulty)
     iaeiy.enemiesCreated.push(newEnemy)
     break;
     case 3:
     var ypos = iaeiy.randomY()
     var xpos = iaeiy.selfPlayArea.right + 20
-    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20,"right",difficulty)
+    var size = randomInt(iaeiy.levelMaxSize,20)
+    var newEnemy = new iaeiy.Enemy(xpos,ypos,size,size,"right",difficulty)
     iaeiy.enemiesCreated.push(newEnemy)
     break;
     default:
@@ -295,6 +318,7 @@ iaeiy.endLevel = function(){
 iaeiy.startGame = function(){
   $(".front").fadeOut(1000)
   $("#start_button").fadeOut(600)
+  $("#announcer").fadeOut(1000)
   $("title").html("it all ends in you.")
   iaeiy.updateLevel(iaeiy.levelVal)
   iaeiy.loadLevel();
@@ -314,9 +338,12 @@ iaeiy.checkWinLose = function(){
 iaeiy.youLose = function(){
   $(".front").fadeIn(5000)
   $("title").html("breathe again")
+  iaeiy.announcerRandomise();
+  $("#announcer").html("overconfidence.")
 
   setTimeout(function(){
     $("#start_button").fadeIn(700)
+    $("#announcer").fadeIn(100)
   },6000)
 
 }
@@ -344,13 +371,22 @@ iaeiy.clearEnemies = function(){
   console.log("clearing")
 }
 
+iaeiy.announcerRandomise = function(){
+  var xpos = randomInt(60,15) + "%"
+  var ypos = randomInt(40,20) + "%"
+  $("#announcer").animate({top: ypos,left: xpos})
+}
+
 iaeiy.levelWin = function(){
-  iaeiy.levelVal++;
+  if (iaeiy.levelVal !== 3){iaeiy.levelVal++};
   iaeiy.updateLevel(iaeiy.levelVal);
 
   $(".front").fadeIn(2000)
   $("title").html("breathe once more")
   $("#start_button").fadeIn(1000)
+  iaeiy.announcerRandomise();
+  $("#announcer").fadeIn(1000)
+  $("#announcer").html("success brings confidence")
 
   var buttonText = function(){
     switch(iaeiy.levelVal){
@@ -364,10 +400,13 @@ iaeiy.levelWin = function(){
     return "breathe deep"
     break;
     default:
-    return "button broked. :("
+    return "again."
   }}
   $("#start_button").html(buttonText)
 
+  if (iaeiy.levelVal === 3){
+    $("#announcer").html("confidence brings completion. congratulations.")
+  }
 }
 
 iaeiy.updateLevel = function(i){
@@ -375,7 +414,10 @@ iaeiy.updateLevel = function(i){
   iaeiy.levelTimer = iaeiy.levelSettings[i].timer;
   iaeiy.levelDifficulty = iaeiy.levelSettings[i].difficulty;
   iaeiy.levelSpawnTimer = iaeiy.levelSettings[i].spawnTimer;
+  iaeiy.levelMaxSize = iaeiy.levelSettings[i].maxSize
 }
+
+iaeiy.reset = function(){}
 
 //To test stuff
 $(function(){

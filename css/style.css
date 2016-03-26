@@ -31,7 +31,7 @@ font-weight: bold;
 
 .self_area{
   margin: 10px solid black;
-  border: 5px solid white;
+  border: 5px solid #235399;
   position: fixed;
   left: 10px;
   top: 10px;
@@ -43,22 +43,43 @@ font-weight: bold;
   position: fixed;
   left: 200px;
   top:  200px;
-  background-color: lime;
+  background-color: #235399;
   height: 20px;
   width: 20px;
  }
 
 .enemy {
-  background-color: red;
+  background-color: #BF140B;
   position: fixed;
   width: 20px;
   height: 20px
 }
 
 #scoreboard {
-  font-family:;
   position: fixed;
   left: 540px;
   color: lime;
   font-size: 20px 
+}
+
+#announcer{
+  position:fixed;
+  left: 50%;
+  top: 30%;
+  color: #302F2F;
+  display: hidden;
+}
+
+#reset{
+  position:fixed;
+  font-size: 13px;
+  background-color: #979797;
+  color: #302F2F;
+  line-height: 10px;
+  padding: 5px;
+  right: 3px;
+  bottom: 3px;
+  width:105px;
+  height:20px;
+  cursor: pointer;
 }
