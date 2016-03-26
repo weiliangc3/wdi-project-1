@@ -417,8 +417,6 @@ iaeiy.updateLevel = function(i){
   iaeiy.levelMaxSize = iaeiy.levelSettings[i].maxSize
 }
 
-iaeiy.reset = function(){}
-
 //To test stuff
 $(function(){
   $("#button1").click(function(){
