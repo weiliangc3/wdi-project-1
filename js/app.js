@@ -10,6 +10,7 @@ iaeiy.baseCollisionThreshold = 3
 iaeiy.purgeInterval = null
 iaeiy.enemyCreationTimer=0
 
+
 iaeiy.levelVal = 0
 iaeiy.lives = 3
 iaeiy.levelTimer = 10000
@@ -96,23 +97,23 @@ $(document).keyup(function(e) {
 iaeiy.playerMovement = function() {
   for (var direction in iaeiy.playerKeyStore) {
     if (!iaeiy.playerKeyStore.hasOwnProperty(direction)) continue;
-    if (direction == 37) {
+    if (direction == 37 || direction == 65) {
       if (iaeiy.player.x > iaeiy.selfPlayArea.left){
         $("#player").animate({left: "-=5"}, 0);
       }                
     }
     if (iaeiy.player.y > iaeiy.selfPlayArea.up){
-      if (direction == 38) {
+      if (direction == 38 || direction == 87) {
         $("#player").animate({top: "-=5"}, 0);  
       }
     }
     if (iaeiy.player.x < iaeiy.selfPlayArea.right){
-      if (direction == 39) {
+      if (direction == 39 || direction == 68) {
         $("#player").animate({left: "+=5"}, 0);  
       }
     }
     if (iaeiy.player.y < iaeiy.selfPlayArea.down){
-      if (direction == 40) {
+      if (direction == 40 || direction == 83) {
         $("#player").animate({top: "+=5"}, 0);  
       }
     }
@@ -223,6 +224,7 @@ iaeiy.checkCollisions = function(){
     var enemyToCheck = "#" + iaeiy.enemiesCreated[index].enemyName
     iaeiy.enemiesCreated[index].x = $(enemyToCheck).position().left
     iaeiy.enemiesCreated[index].y = $(enemyToCheck).position().top
+    iaeiy.enemiesCreated[index].duration--;
   });
 
   //update karma positions
@@ -230,6 +232,7 @@ iaeiy.checkCollisions = function(){
     var karmaToCheck = "#" + iaeiy.karmaCreated[index].karmaName
     iaeiy.karmaCreated[index].x = $(karmaToCheck).position().left
     iaeiy.karmaCreated[index].y = $(karmaToCheck).position().top
+    iaeiy.karmaCreated[index].duration--;
   });
 
   //check collisions
@@ -271,10 +274,10 @@ iaeiy.checkCollisions = function(){
 iaeiy.purgeEnemies = function(){
   $($(iaeiy.enemiesCreated).get().reverse()).each(function(index){
     var enemyToCheck= "#" + iaeiy.enemiesCreated[index].enemyName
-    if ((iaeiy.selfPlayArea.left-20 >iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].type==="right") ||
-      (iaeiy.selfPlayArea.right+20 < iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].type==="left") ||
-      (iaeiy.selfPlayArea.up-20 > iaeiy.enemiesCreated[index].y && iaeiy.enemiesCreated[index].type==="down") ||
-      (iaeiy.selfPlayArea.down+20 < iaeiy.enemiesCreated[index].y && iaeiy.enemiesCreated[index].type==="up")){
+    if ((iaeiy.selfPlayArea.left-20 >iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].duration < 0) ||
+      (iaeiy.selfPlayArea.right+20 < iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].duration < 0) ||
+      (iaeiy.selfPlayArea.up-20 > iaeiy.enemiesCreated[index].y && iaeiy.enemiesCreated[index].duration < 0) ||
+      (iaeiy.selfPlayArea.down+20 < iaeiy.enemiesCreated[index].y && iaeiy.enemiesCreated[index].duration < 0)){
       $(enemyToCheck).remove();
     iaeiy.enemiesCreated.splice(index,1);
   }
@@ -284,10 +287,10 @@ iaeiy.purgeEnemies = function(){
 iaeiy.purgeKarma = function(){
   $($(iaeiy.karmaCreated).get().reverse()).each(function(index){
     var karmaToCheck= "#" + iaeiy.karmaCreated[index].karmaName
-    if ((iaeiy.selfPlayArea.left-20 >iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].type==="right") ||
-      (iaeiy.selfPlayArea.right+20 < iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].type==="left") ||
-      (iaeiy.selfPlayArea.up-20 > iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].type==="down") ||
-      (iaeiy.selfPlayArea.down+20 < iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].type==="up")){
+    if ((iaeiy.selfPlayArea.left-20 >iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].duration < 0) ||
+      (iaeiy.selfPlayArea.right+20 < iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].duration < 0) ||
+      (iaeiy.selfPlayArea.up-20 > iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0) ||
+      (iaeiy.selfPlayArea.down+20 < iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0)){
       console.log("purge fired")
     $(karmaToCheck).remove();
     iaeiy.karmaCreated.splice(index,1);
@@ -304,10 +307,6 @@ iaeiy.player = {
 
 iaeiy.karmaCreated = []
 iaeiy.enemiesCreated =[]
-
-//For future use? Maybe?
-//iaeiy.enemiesActive =[]
-
 iaeiy.enemyCounter = 0
 
 iaeiy.Enemy = function (posX,posY,width,height,type,difficulty){
@@ -335,7 +334,8 @@ iaeiy.Karma = function (posX,posY,type){
   this.width = 20
   this.height = 20
   this.karmaName = karmaName
-  this.type = type 
+  this.type = type
+  this.duration = 20
 }
 
 iaeiy.randomX = function(){
@@ -435,8 +435,26 @@ iaeiy.startLevel = function(diffic,spawnTimer){
 }
 
 iaeiy.updateBoard = function(){
-  $("#patience").html(iaeiy.lives)
   $("#game_timer").html(iaeiy.levelTimer)
+    switch(iaeiy.lives){
+      case 4:
+      $("#health5").fadeOut()
+      break;
+      case 3:
+      $("#health4").fadeOut()
+      break;
+      case 2:
+      $("#health3").fadeOut()
+      break;
+      case 1:
+      $("#health2").fadeOut()
+      break;
+      case 0:
+      $("#health1").fadeOut()
+      break;
+      default:
+      console.log("life error detected")
+    }
 }
 
 iaeiy.endLevel = function(){
@@ -447,7 +465,7 @@ iaeiy.startGame = function(){
   $(".front").fadeOut(1000)
   $("#start_button").fadeOut(600)
   $("#announcer").fadeOut(1000)
-  $("title").html("it all ends in you.")
+  $("title").html("it all ends in you")
   iaeiy.updateLevel(iaeiy.levelVal)
   iaeiy.loadLevel();
 }
