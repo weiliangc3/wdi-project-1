@@ -287,8 +287,6 @@ iaeiy.checkWinLose = function(){
   iaeiy.levelTimer -=20;
   if(iaeiy.lives < 1){
     iaeiy.youLose();
-    iaeiy.clearLevel();  
-    iaeiy.clearLevel();
     iaeiy.clearLevel();
   } else if (iaeiy.levelTimer < 0){
     iaeiy.levelWin();
@@ -298,7 +296,6 @@ iaeiy.checkWinLose = function(){
 iaeiy.youLose = function(){
   $(".front").fadeIn(5000)
   $("title").html("breathe again")
-  iaeiy.levelOn = false
 
   setTimeout(function(){
     $("#start_button").fadeIn(700)
@@ -314,10 +311,10 @@ iaeiy.loadLevel = function(){
 
 iaeiy.clearLevel = function(){
   clearInterval(iaeiy.refreshInterval);
+  iaeiy.purgeInterval = setInterval(iaeiy.clearEnemies, 50)
   setTimeout(function(){
     clearInterval(iaeiy.purgeInterval)
   },1000)
-  iaeiy.purgeInterval = setInterval(iaeiy.clearEnemies, 50)
 }
 
 iaeiy.clearEnemies = function(){
@@ -326,6 +323,7 @@ iaeiy.clearEnemies = function(){
     $(enemyToRemove).remove();
     iaeiy.enemiesCreated.splice(index,1);
   })
+  console.log("clearing")
 }
 
 
