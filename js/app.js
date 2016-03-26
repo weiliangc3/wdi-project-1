@@ -1,13 +1,25 @@
-//X is left and right
-//y is up and down
-
 var iaeiy = iaeiy ||{}
 
+iaeiy.collisionThreshold = 0
+iaeiy.lives = 20
+iaeiy.baseDamageDelay = 40
+iaeiy.baseCollisionThreshold = 3
+
+iaeiy.enemyCreationTimer=0
+iaeiy.levelTimer = 40000
+iaeiy.levelDifficulty = 4
+iaeiy.levelSpawnTimer = 20
+
+
 $(function(){
-  iaeiy.init()
+  $("#start_button").click(function(){
+    iaeiy.init();
+  })
 })
 
 iaeiy.init = function(){
+  iaeiy.levelOn = false
+  iaeiy.startGame();
   iaeiy.initButtons()
 }
 
@@ -18,12 +30,15 @@ iaeiy.initButtons = function(){
 }
 
 iaeiy.refreshFunction = function (){
+  if (iaeiy.levelOn){
   iaeiy.playerMovement();
   iaeiy.moveEnemies();
   iaeiy.checkCollisions();
   iaeiy.purgeEnemies();
   iaeiy.enemyCreation();
   iaeiy.updateBoard();
+  iaeiy.checkWinLose();
+}
 }
 
 // Movement Functions (with restrictions)
@@ -59,6 +74,11 @@ iaeiy.playerMovement = function() {
     }
   }  
 }
+
+// maybe?
+// iaeiy.populatePlayArea = function(){
+//   iaeiy.selfPlayArea.left = $(".self_area").style.left
+// }
 
 iaeiy.selfPlayArea = {
   left: 15,
@@ -232,16 +252,6 @@ iaeiy.createEnemy = function(difficulty){
   }
 }
 
-iaeiy.collisionThreshold = 0
-iaeiy.lives = 20
-iaeiy.baseDamageDelay = 40
-iaeiy.baseCollisionThreshold = 3
-
-iaeiy.levelOn = false
-iaeiy.enemyCreationTimer=0
-iaeiy.levelTimer = 0
-iaeiy.levelDifficulty = 4
-iaeiy.levelSpawnTimer = 20
 iaeiy.enemyCreation = function(){
   if (iaeiy.levelOn){
     if (iaeiy.enemyCreationTimer === 0 ){
@@ -261,6 +271,33 @@ iaeiy.startLevel = function(diffic,spawntimer){
 
 iaeiy.updateBoard = function(){
   $("#patience").html(iaeiy.lives)
+}
+
+iaeiy.endLevel = function(){
+  iaeiy.levelOn = false
+}
+
+iaeiy.startGame = function(){
+  $(".front").fadeOut(1000)
+  $("title").html("it all ends in you.")
+  iaeiy.loadLevel();
+}
+
+iaeiy.checkWinLose = function(){
+  if(iaeiy.lives < 1){
+    iaeiy.youLose();
+  }
+}
+
+iaeiy.youLose = function(){
+  $(".front").fadeIn(5000)
+  $("title").html("breathe again")
+  iaeiy.levelOn = false  
+}
+
+iaeiy.loadLevel = function(){
+  iaeiy.levelTimer=40000
+  iaeiy.levelOn=true
 }
 
 //To test stuff
