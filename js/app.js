@@ -11,19 +11,19 @@ iaeiy.init = function(){
   iaeiy.initButtons()
 }
 
-
 iaeiy.initButtons = function(){
  console.log("buttons initialised");
  setInterval(iaeiy.refreshFunction, 20)
  iaeiy.refreshFunction();
 }
 
-
 iaeiy.refreshFunction = function (){
   iaeiy.playerMovement();
   iaeiy.moveEnemies();
   iaeiy.checkCollisions();
   iaeiy.purgeEnemies();
+  iaeiy.enemyCreation();
+  iaeiy.updateBoard();
 }
 
 // Movement Functions (with restrictions)
@@ -67,7 +67,6 @@ iaeiy.selfPlayArea = {
   down: 595,
 }
 
-
 iaeiy.moveEnemies = function(){
   $(iaeiy.enemiesCreated).each(function (index){
     var enemyName = "#" + iaeiy.enemiesCreated[index].enemyName
@@ -108,8 +107,7 @@ iaeiy.moveEnemies = function(){
   })
 }
 
-iaeiy.collisionThreshold = 5
-iaeiy.lives = 20
+
 
 
 iaeiy.checkCollisions = function(){
@@ -130,18 +128,23 @@ iaeiy.checkCollisions = function(){
      iaeiy.player.x + iaeiy.player.width > iaeiy.enemiesCreated[index].x &&
      iaeiy.player.y < iaeiy.enemiesCreated[index].y + iaeiy.enemiesCreated[index].height &&
      iaeiy.player.height + iaeiy.player.y > iaeiy.enemiesCreated[index].y){
-      iaeiy.collisionThreshold--;  
-  } else if(iaeiy.enemiesCreated.length===(index+1) && iaeiy.collisionCounter < 5){
+      iaeiy.collisionThreshold = iaeiy.collisionThreshold - 2;
+    console.log("collision")
+  } else if (iaeiy.enemiesCreated.length === (index+1) && iaeiy.collisionThreshold < iaeiy.baseCollisionThreshold){
+    console.log("regeneration active")
     iaeiy.collisionThreshold++
+  }
+
+  //decay threshold if above base
+  if(iaeiy.collisionThreshold > iaeiy.baseCollisionThreshold){
+    console.log("decay active")
+    iaeiy.collisionThreshold--
   }
 })
 
   if (iaeiy.collisionThreshold < 0){
     iaeiy.lives--;
-    iaeiy.collisionThreshold = 10;
-
-    //life lost activations
-    $("#scoreboard").html("Faith in humanity: " + iaeiy.lives)
+    iaeiy.collisionThreshold = iaeiy.baseDamageDelay;
   }
 }
 
@@ -172,7 +175,7 @@ iaeiy.enemiesCreated =[]
 
 iaeiy.enemyCounter = 0
 
-iaeiy.Enemy = function (posX,posY,width,height,type){
+iaeiy.Enemy = function (posX,posY,width,height,type,difficulty){
   var enemyName = "enemy" + iaeiy.enemyCounter
   iaeiy.enemyCounter++;
   $(".self_area").append("<div id=\"" + enemyName + "\" class=enemy style=\" height:" + height + "px; width:" + width + "px; left:" + posX + "px;  top:" + posY + "px; position:fixed\"></div>")
@@ -182,8 +185,7 @@ iaeiy.Enemy = function (posX,posY,width,height,type){
   this.height = height
   this.enemyName = enemyName
   this.type = type
-  this.difficulty = 2
-  console.log(this)
+  this.difficulty = difficulty
   var enemyIdentifier = "\"#" + enemyName +"\"" 
 }
 
@@ -198,55 +200,78 @@ iaeiy.randomY = function(){
   return randomInt(iaeiy.selfPlayArea.down,iaeiy.selfPlayArea.up)
 }
 
-iaeiy.createEnemy = function(){
+iaeiy.createEnemy = function(difficulty){
   XYorigin = randomInt(3,0);
   switch (XYorigin){
     case 0:
     var xpos = iaeiy.randomX()
     var ypos = iaeiy.selfPlayArea.up - 20
-    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20,"up")
+    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20,"up",difficulty)
     iaeiy.enemiesCreated.push(newEnemy)
-    console.log("case0:top")
     break;
     case 1:
     var xpos = iaeiy.randomX()
     var ypos = iaeiy.selfPlayArea.down + 20
-    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20,"down")
+    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20,"down",difficulty)
     iaeiy.enemiesCreated.push(newEnemy)
-    console.log("case1:bottom")
     break;   
     case 2:
     var ypos = iaeiy.randomY()
     var xpos = iaeiy.selfPlayArea.left - 20
-    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20,"left")
+    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20,"left",difficulty)
     iaeiy.enemiesCreated.push(newEnemy)
-    console.log("case2:left")
     break;
     case 3:
     var ypos = iaeiy.randomY()
     var xpos = iaeiy.selfPlayArea.right + 20
-    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20,"right")
+    var newEnemy = new iaeiy.Enemy(xpos,ypos,20,20,"right",difficulty)
     iaeiy.enemiesCreated.push(newEnemy)
-    console.log("case3:right")
     break;
     default:
     console.log("error in createEnemy")
   }
 }
 
+iaeiy.collisionThreshold = 0
+iaeiy.lives = 20
+iaeiy.baseDamageDelay = 40
+iaeiy.baseCollisionThreshold = 3
+
+iaeiy.levelOn = false
+iaeiy.enemyCreationTimer=0
+iaeiy.levelTimer = 0
+iaeiy.levelDifficulty = 4
+iaeiy.levelSpawnTimer = 20
+iaeiy.enemyCreation = function(){
+  if (iaeiy.levelOn){
+    if (iaeiy.enemyCreationTimer === 0 ){
+      iaeiy.createEnemy(iaeiy.levelDifficulty)
+      iaeiy.enemyCreationTimer = iaeiy.levelSpawnTimer
+    }
+    iaeiy.enemyCreationTimer--;
+  } 
+}
+
+iaeiy.startLevel = function(diffic,spawntimer){
+  iaeiy.levelOn = true;
+  iaeiy.levelDifficulty = diffic;
+  iaeiy.levelSpawnTimer = spawntimer;
+  iaeiy.collisionThreshold = iaeiy.baseCollisionThreshold
+}
+
+iaeiy.updateBoard = function(){
+  $("#patience").html(iaeiy.lives)
+}
+
 //To test stuff
 $(function(){
-  $("button").click(function(){
-    iaeiy.createEnemy()
+  $("#button1").click(function(){
+    iaeiy.levelOn = true
   })
 })
-iaeiy.enemyTest = {  
-  x: 400,
-  y: 400,
-  width: 20,
-  height: 20,
-  enemyName: "enemyTest",
-  type: "hellemy",
-  difficulty : 5
-}
-iaeiy.enemiesCreated.push(iaeiy.enemyTest)
+
+$(function(){
+  $("#button2").click(function(){
+    iaeiy.levelOn = false
+  })
+})

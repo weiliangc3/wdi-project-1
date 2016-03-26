@@ -26,14 +26,7 @@ body{
   position: fixed;
   width: 20px;
   height: 20px
-
 }
- #enemyTest {
-  left : 400px;
-  top: 400px;
-  height:20px;
-  width: 20px;
- }
 
 #scoreboard {
   position: fixed;
@@ -41,18 +34,3 @@ body{
   color: lime;
   font-size: 20px 
 }
-
-
-
-
-
-
-
-
-
-
- button{
-  position: fixed;
-  right: 0px;
-  top: 0px;
- }
