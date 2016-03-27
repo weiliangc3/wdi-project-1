@@ -521,30 +521,47 @@ iaeiy.updateHealth = function(){
 }
 
 iaeiy.updateKarma = function(){
-  console.log("attempting to update karma "+ iaeiy.levelKarmaCollected)
   switch(iaeiy.levelKarmaCollected){
     case 5:
     $("#karma5").fadeIn()
+    $('#karma4').fadeIn()
+    $("#karma3").fadeIn()
+    $("#karma2").fadeIn()
+    $("#karma1").fadeIn()
     break;
     case 4:
     $("#karma5").fadeOut()
     $('#karma4').fadeIn()
+    $("#karma3").fadeIn()
+    $("#karma2").fadeIn()
+    $("#karma1").fadeIn()
     break;
     case 3:
+    $("#karma5").fadeOut()
     $("#karma4").fadeOut()
     $("#karma3").fadeIn()
     $("#karma2").fadeIn()
     $("#karma1").fadeIn()
     break;
     case 2:
+    $("#karma5").fadeOut()
+    $("#karma4").fadeOut()
     $("#karma3").fadeOut()
     $("#karma2").fadeIn()
+    $("#karma1").fadeIn()
     break;
     case 1:
+    $("#karma5").fadeOut()
+    $("#karma4").fadeOut()
+    $("#karma3").fadeOut()
     $("#karma2").fadeOut()
     $("#karma1").fadeIn()
     break;
     case 0:
+    $("#karma5").fadeOut()
+    $("#karma4").fadeOut()
+    $("#karma3").fadeOut()
+    $("#karma2").fadeOut()
     $("#karma1").fadeOut()
     break;
     default:
@@ -615,8 +632,21 @@ iaeiy.youLose = function(){
   $("title").html("breathe again")
   iaeiy.announcerRandomise();
   $("#announcer").html("overconfidence.")
-
+  if (iaeiy.gameType==="challenge"){
+    $("#score_stat").html("you reached level " + (iaeiy.levelVal+1))
+    $("#karma_stat").html("karma collected: " + iaeiy.karmaCollected)
+    $("#comment").html("you were " + iaeiy.levelTimer + " points from the end")
+    iaeiy.karmaCollected = 0;
+    iaeiy.levelVal = 0;
+  } else if (iaeiy.gameType==="endless"){
+    $("#score_stat").html("score reached: " + iaeiy.levelTimer)
+    $("#karma_stat").html("karma collected: " + iaeiy.karmaCollected)
+    $("#comment").html("");
+    iaeiy.karmaCollected = 0;
+    iaeiy.levelVal = 0;
+  }
   setTimeout(function(){
+    $("#start_button").html("again?")
     $("#start_button").fadeIn(700)
     $("#announcer").fadeIn(100)
   },6000)
@@ -625,7 +655,7 @@ iaeiy.youLose = function(){
 
 iaeiy.loadLevel = function(){
   if (iaeiy.gameType==="challenge"){
-    iaeiy.timerName = "Time Remaining:"
+    iaeiy.timerName = "Points left:"
     iaeiy.levelTimer=iaeiy.levelSettings[iaeiy.levelVal].timer
     iaeiy.lives= iaeiy.levelSettings[iaeiy.levelVal].lives
     iaeiy.levelOn=true
@@ -671,35 +701,23 @@ iaeiy.announcerRandomise = function(){
 }
 
 iaeiy.levelWin = function(){
-  if (iaeiy.levelVal !== 3){iaeiy.levelVal++};
-  iaeiy.updateLevel(iaeiy.levelVal);
   $(".front").fadeIn(2000)
   $("title").html("take breath")
   $("#start_button").fadeIn(1000)
   iaeiy.announcerRandomise();
   $("#announcer").fadeIn(1000)
+  $("#start_button").html("next stage")
+  $("#karma_stat").html("karma collected: " + iaeiy.karmaCollected)
+  $("#comment").html("prepare yourself")
+  if (iaeiy.levelVal === iaeiy.levelSettings.length-1){
+    $("#announcer").html("confidence brings mastery. congratulations.")
+    $("#score_stat").html("challenge mode complete!")  
+  } else {
   $("#announcer").html("success brings confidence")
-
-  var buttonText = function(){
-    switch(iaeiy.levelVal){
-      case 1:
-      return "breathe once"
-      break;
-      case 2:
-      return "breathe twice"
-      break;
-      case 3:
-      return "breathe deep"
-      break;
-      default:
-      return "again."
-    }
+  $("#score_stat").html("next level: " + (iaeiy.levelVal+2))
   }
-  $("#start_button").html(buttonText)
-
-  if (iaeiy.levelVal === 4){
-    $("#announcer").html("confidence brings completion. congratulations.")
-  }
+  if (iaeiy.levelVal !== iaeiy.levelSettings.length){iaeiy.levelVal++};
+  iaeiy.updateLevel(iaeiy.levelVal);
 }
 
 iaeiy.updateLevel = function(i){
@@ -788,21 +806,3 @@ iaeiy.initOptions = function(){
     $(this).addClass("button_inactive")
   })
 }
-
-
-
-
-
-
-//To test stuff
-$(function(){
-  $("#button1").click(function(){
-    iaeiy.createKarma();
-  })
-})
-
-$(function(){
-  $("#button2").click(function(){
-    iaeiy.levelOn = false
-  })
-})

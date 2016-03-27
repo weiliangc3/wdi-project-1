@@ -125,7 +125,7 @@ font-weight: bold;
   border-radius: 3px;
   top:10px;
   left: 530px;
-  color: #BC7103;
+  color: #302F2F;
   height: 180px;
   width: 400px;
   font-size: 20px 
@@ -294,7 +294,11 @@ font-weight: bold;
   display:inline-block;
 }
 
-#stats{
-  left: 20px;
+.stats_board{
+  font-weight: normal;
+  position: fixed;
+  font-size: 15px;
+  left: 0px;
   bottom: 20px;
+  list-style: none;
 }
