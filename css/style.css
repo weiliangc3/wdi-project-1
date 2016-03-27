@@ -151,7 +151,6 @@ font-weight: bold;
   width:105px;
   height:20px;
   cursor: pointer;
-  opacity: 0.2;
 }
 
 
@@ -219,26 +218,27 @@ font-weight: bold;
 
 .options{
   position:fixed;
-  left: 20px;
-  top: 420px;
+  font-size:13px;
+  right: 5px;
+  top: 5px;
   height: 200px;
-  width: 300px;
+  width: 200px;
   display:block;
   text-align: center;
 }
 
 .mode_button{
-  line-height: 30px;
+  line-height: 20px;
   background-color: #E82D23;
-  height: 30px;
-  margin: 5px;
+  height: 20px;
+  margin: 2px;
   display:block;
   text-align: center;
   cursor: pointer;
 }
 
 .button_inactive{
-  opacity:0.3;
+  opacity:0.5;
 }
 
 .mode_button_over{
@@ -246,25 +246,25 @@ font-weight: bold;
 }
 
 .option_button_up{
-  height: 20px;
-  width: 20px;
+  height: 14px;
+  width: 14px;
   position: absolute;
   top: 5px;
-  right: 50px;
+  right: 29px;
   background-image: url("/assets/up_arrow.png");
-  background-size: 20px 20px;
+  background-size: 14px 14px;
   display: inline-block;
   cursor: pointer;
 }
 
 .option_button_down{
-  height: 20px;
-  width: 20px;
+  height: 14px;
+  width: 14px;
   position: absolute;
   top: 5px;
-  right: 20px;
+  right: 5px;
   background-image: url("/assets/down_arrow.png");
-  background-size: 20px 20px;
+  background-size: 14px 14px;
   display: inline-block;
   margin-left: 10px;
   cursor: pointer;
@@ -272,10 +272,10 @@ font-weight: bold;
 
 .endless_set{
   text-align: left;
-  line-height: 32px;
+  line-height: 20px;
   background-color: #E82D23;
-  height: 35px;
-  width: 260px;
+  height: 20px;
+  width: 190px;
   margin: 5px;
   padding: 2px;
   position: relative;
@@ -283,14 +283,12 @@ font-weight: bold;
 }
 
 .endless_var {
-  line-height: 0px;
   height: 20px;
-  width: 150px;
+  width: 120px;
   display:inline-block;
 }
 
 .endless_val{
-  line-height: 0px;
   height: 20px;
   width : 20px;
   display:inline-block;

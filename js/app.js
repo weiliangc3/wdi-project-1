@@ -20,7 +20,7 @@ iaeiy.levelTimer = 10000
 iaeiy.levelDifficulty = 4
 iaeiy.levelSpawnTimer = 20
 iaeiy.levelMaxSize = 20
-iaeiy.levelKarmaCollected = 0
+iaeiy.levelKarmaCollected = 1
 iaeiy.timerName = "Time remaining:  "
 iaeiy.karmaBaseDelay = 100
 
@@ -307,6 +307,9 @@ iaeiy.purgeKarma = function(){
       (iaeiy.selfPlayArea.down+20 < iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0)){
       $(karmaToCheck).remove();
     iaeiy.karmaCreated.splice(index,1);
+    if (iaeiy.levelKarmaCollected > 0){
+      iaeiy.levelKarmaCollected--;
+    }
   }
 })
 }
@@ -611,13 +614,13 @@ iaeiy.checkWinLose = function(){
     iaeiy.youLose();
     iaeiy.clearLevel();
   };
-  if (gameType = "challenge"){
-  if (iaeiy.levelTimer < 0){
-    iaeiy.levelWin();
-    iaeiy.clearLevel();
-  }
-  iaeiy.levelTimer -= (20*iaeiy.karmaMultiplier);
-  } else if (gameType = "endless"){
+  if (iaeiy.gameType === "challenge"){
+    if (iaeiy.levelTimer < 0){
+      iaeiy.levelWin();
+      iaeiy.clearLevel();
+    }
+    iaeiy.levelTimer -= (20*iaeiy.karmaMultiplier);
+  } else if (iaeiy.gameType === "endless"){
     iaeiy.levelTimer += (20*iaeiy.karmaMultiplier)
   }
 
@@ -637,9 +640,17 @@ iaeiy.youLose = function(){
 }
 
 iaeiy.loadLevel = function(){
-  iaeiy.levelTimer=iaeiy.levelSettings[iaeiy.levelVal].timer
-  iaeiy.lives= iaeiy.levelSettings[iaeiy.levelVal].lives
-  iaeiy.levelOn=true
+  if (iaeiy.gameType==="challenge"){
+    iaeiy.timerName = "Time Remaining:"
+    iaeiy.levelTimer=iaeiy.levelSettings[iaeiy.levelVal].timer
+    iaeiy.lives= iaeiy.levelSettings[iaeiy.levelVal].lives
+    iaeiy.levelOn=true
+  } else if (iaeiy.gameType==="endless"){
+    iaeiy.timerName = "Score:"
+    iaeiy.levelTimer = 0
+    iaeiy.lives = 5;
+    iaeiy.levelOn = true
+  }
 }
 
 iaeiy.clearLevel = function(){
@@ -703,11 +714,19 @@ iaeiy.levelWin = function(){
 }
 
 iaeiy.updateLevel = function(i){
-  iaeiy.lives = iaeiy.levelSettings[i].lives;
-  iaeiy.levelTimer = iaeiy.levelSettings[i].timer;
-  iaeiy.levelDifficulty = iaeiy.levelSettings[i].difficulty;
-  iaeiy.levelSpawnTimer = iaeiy.levelSettings[i].spawnTimer;
-  iaeiy.levelMaxSize = iaeiy.levelSettings[i].maxSize
+  if(iaeiy.gameType==="challenge"){
+    iaeiy.lives = iaeiy.levelSettings[i].lives;
+    iaeiy.levelTimer = iaeiy.levelSettings[i].timer;
+    iaeiy.levelDifficulty = iaeiy.levelSettings[i].difficulty;
+    iaeiy.levelSpawnTimer = iaeiy.levelSettings[i].spawnTimer;
+    iaeiy.levelMaxSize = iaeiy.levelSettings[i].maxSize;
+  } else if (iaeiy.gameType==="endless"){
+    iaeiy.lives = 5;
+    iaeiy.levelTimer = 0;
+    iaeiy.levelDifficulty = getIntId("diff_option_display");
+    iaeiy.levelSpawnTimer = getIntId("spawn_option_display");
+    iaeiy.levelMaxSize = getIntId("size_option_display");
+  }
 }
 
 var getIntId = function(name){
@@ -729,14 +748,16 @@ iaeiy.checkOptionValid = function(name,max,min){
 }
 
 iaeiy.initOptions = function(){
-  console.log("options started")
+  $(".endless_options").hide();
   $("#normal_option").click(function(){
+    iaeiy.gameType = "challenge"
     $("#normal_option").removeClass("button_inactive")
     $("#endless_option").addClass("button_inactive")
     $(".endless_options").addClass("button_inactive")
     $(".endless_options").slideUp()
   })
   $("#endless_option").click(function(){
+    iaeiy.gameType = "endless"
     $("#normal_option").addClass("button_inactive")
     $("#endless_option").removeClass("button_inactive")
     $(".endless_options").removeClass("button_inactive")
@@ -771,6 +792,11 @@ iaeiy.initOptions = function(){
     if(iaeiy.checkOptionValid("size_option_display",70,20)){
       iaeiy.addValToId("size_option_display",-5);
     }
+  })
+  $($("#reset")).hover(function(){
+    this.removeClass("button_inactive")
+  }, function(){
+    this.addClass("button_inactive")
   })
 }
 
