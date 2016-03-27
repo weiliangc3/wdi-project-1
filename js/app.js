@@ -61,7 +61,7 @@ $(function(){
     iaeiy.karmaTimer = 60
     $("#start_button").fadeOut(1000)
     setTimeout(function(){
-      $("#start_button").html("breathe in");
+      $("#start_button").html("to the start");
       $("#start_button").fadeIn(1000)
     },1000)
   })
@@ -794,9 +794,9 @@ iaeiy.initOptions = function(){
     }
   })
   $($("#reset")).hover(function(){
-    this.removeClass("button_inactive")
+    $(this).removeClass("button_inactive")
   }, function(){
-    this.addClass("button_inactive")
+    $(this).addClass("button_inactive")
   })
 }
 
