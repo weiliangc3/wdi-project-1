@@ -293,3 +293,8 @@ font-weight: bold;
   width : 20px;
   display:inline-block;
 }
+
+#stats{
+  left: 20px;
+  bottom: 20px;
+}

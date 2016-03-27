@@ -271,11 +271,11 @@ iaeiy.checkCollisions = function(){
     $(karmaToCheck).remove();
     iaeiy.karmaCreated.splice(index,1);
     iaeiy.karmaCollected++;
-    if (iaeiy.levelKarmaCollected < 5){
-      console.log("levelKarmaCollected")
-      console.log(iaeiy.levelKarmaCollected)
-      iaeiy.levelKarmaCollected++;
+    iaeiy.levelKarmaCollected++;
+    if (iaeiy.levelKarmaCollected > 5){
+      iaeiy.levelKarmaCollected = 5
     }
+    console.log(iaeiy.levelKarmaCollected);
   }
 })
 
@@ -309,6 +309,7 @@ iaeiy.purgeKarma = function(){
     iaeiy.karmaCreated.splice(index,1);
     if (iaeiy.levelKarmaCollected > 0){
       iaeiy.levelKarmaCollected--;
+      console.log("lost karma")
     }
   }
 })
@@ -520,47 +521,30 @@ iaeiy.updateHealth = function(){
 }
 
 iaeiy.updateKarma = function(){
+  console.log("attempting to update karma "+ iaeiy.levelKarmaCollected)
   switch(iaeiy.levelKarmaCollected){
     case 5:
     $("#karma5").fadeIn()
-    $('#karma4').fadeIn()
-    $("#karma3").fadeIn()
-    $("#karma2").fadeIn()
-    $("#karma1").fadeIn()
     break;
     case 4:
     $("#karma5").fadeOut()
     $('#karma4').fadeIn()
-    $("#karma3").fadeIn()
-    $("#karma2").fadeIn()
-    $("#karma1").fadeIn()
     break;
     case 3:
-    $("#karma5").fadeOut()
     $("#karma4").fadeOut()
     $("#karma3").fadeIn()
     $("#karma2").fadeIn()
     $("#karma1").fadeIn()
     break;
     case 2:
-    $("#karma5").fadeOut()
-    $("#karma4").fadeOut()
     $("#karma3").fadeOut()
     $("#karma2").fadeIn()
-    $("#karma1").fadeIn()
     break;
     case 1:
-    $("#karma5").fadeOut()
-    $("#karma4").fadeOut()
-    $("#karma3").fadeOut()
     $("#karma2").fadeOut()
     $("#karma1").fadeIn()
     break;
     case 0:
-    $("#karma5").fadeOut()
-    $("#karma4").fadeOut()
-    $("#karma3").fadeOut()
-    $("#karma2").fadeOut()
     $("#karma1").fadeOut()
     break;
     default:
@@ -651,6 +635,11 @@ iaeiy.loadLevel = function(){
     iaeiy.lives = 5;
     iaeiy.levelOn = true
   }
+  $("#karma5").fadeOut()
+  $('#karma4').fadeOut()
+  $("#karma3").fadeOut()
+  $("#karma2").fadeOut()
+  $("#karma1").fadeOut()
 }
 
 iaeiy.clearLevel = function(){
