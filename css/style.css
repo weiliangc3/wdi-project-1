@@ -30,6 +30,16 @@ font-weight: bold;
   cursor: pointer;
 }
 
+#buffer{
+  border: 10px solid white;
+  border-bottom: 45px solid white;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 510px;
+  height: 560px;
+}
+
 .self_area{
   border: 5px solid #235399;
   border-radius: 3px;
@@ -37,17 +47,18 @@ font-weight: bold;
   left: 10px;
   top: 10px;
   width: 500px;
-  height:600px;
+  height:550px;
 }
 
 .neek_area{
+  background-color: white;
   border: 5px solid #CCE322;
   border-radius: 3px;
   position: fixed;
   left: 530px;
   top: 210px;
   width: 400px;
-  height: 400px;
+  height: 350px;
 }
 
 #player {
@@ -68,6 +79,7 @@ font-weight: bold;
 
 .scoreboard {
   position: fixed;
+  background-color: white;
   border: 5px solid #349244;
   border-radius: 3px;
   top:10px;
@@ -108,7 +120,7 @@ font-weight: bold;
   height: 20px
 }
 
-#health1{
+#health5{
   background-color: #349244;
   height: 20px;
   width: 60px;
@@ -119,7 +131,7 @@ font-weight: bold;
   top: 20px;
 }
 
-#health2{
+#health4{
   background-color: #349244;
   height: 20px;
   width: 60px;
@@ -139,7 +151,7 @@ font-weight: bold;
   left: 540px;
   top: 90px;
 }
-#health4{
+#health2{
   background-color: #349244;
   height: 20px;
   width: 60px;
@@ -149,7 +161,7 @@ font-weight: bold;
   left: 540px;
   top: 125px;
 }
-#health5{
+#health1{
   background-color: #349244;
   height: 20px;
   width: 60px;
@@ -161,28 +173,115 @@ font-weight: bold;
 }
 
 #game_timer{
+  color: #065914;
   position: fixed;
   left: 650px;
   top: 25px;
 }
 
-#game_timer_name{
+#karma_collected{
+  color: #065914;
   position: fixed;
-  left: 630px;
-  top: 25px;
+  left: 650px;
+  top: 165px;
 }
 
-/*
-planned extra functionality- unused for now
-.empathy{
-  background-color:#CCE322;
-  width: 60px;
-  height: 60px;
+#difficulty_display{
+  color: #065914;
+  position: fixed;
+  left: 650px;
+  top: 60px;
 }
 
-.selfishness{
-  background-color: #730600;
-  width: 60px;
-  height: 60px;
+#spawn_delay{
+  color: #065914;
+  position: fixed;
+  left: 650px;
+  top: 95px;
 }
-*/
+
+#max_size{
+  color: #065914;
+  position: fixed;
+  left: 650px;
+  top: 130px;
+}
+
+.options{
+  position:fixed;
+  left: 20px;
+  top: 420px;
+  height: 200px;
+  width: 300px;
+  display:block;
+  text-align: center;
+}
+
+.mode_button{
+  line-height: 30px;
+  background-color: #E82D23;
+  height: 30px;
+  margin: 5px;
+  display:block;
+  text-align: center;
+  cursor: pointer;
+}
+
+.button_inactive{
+  opacity:0.3;
+}
+
+.mode_button_over{
+  opacity:0.7;
+}
+
+.option_button_up{
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  top: 5px;
+  right: 50px;
+  background-image: url("/assets/up_arrow.png");
+  background-size: 20px 20px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.option_button_down{
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  top: 5px;
+  right: 20px;
+  background-image: url("/assets/down_arrow.png");
+  background-size: 20px 20px;
+  display: inline-block;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.endless_set{
+  text-align: left;
+  line-height: 32px;
+  background-color: #E82D23;
+  height: 35px;
+  width: 260px;
+  margin: 5px;
+  padding: 2px;
+  position: relative;
+  display: block;
+}
+
+.endless_var {
+  line-height: 0px;
+  height: 20px;
+  width: 150px;
+  display:inline-block;
+}
+
+.endless_val{
+  line-height: 0px;
+  height: 20px;
+  width : 20px;
+  display:inline-block;
+}

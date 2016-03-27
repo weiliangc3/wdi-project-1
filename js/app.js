@@ -9,14 +9,17 @@ iaeiy.baseDamageDelay = 40
 iaeiy.baseCollisionThreshold = 3
 iaeiy.purgeInterval = null
 iaeiy.enemyCreationTimer=0
+iaeiy.karmaCollected=0
 
 
+iaeiy.gameType = "normal"
 iaeiy.levelVal = 0
 iaeiy.lives = 3
 iaeiy.levelTimer = 10000
 iaeiy.levelDifficulty = 4
 iaeiy.levelSpawnTimer = 20
 iaeiy.levelMaxSize = 20
+iaeiy.timerName = "Time remaining:  "
 
 iaeiy.levelSettings = [
 {lives :5,
@@ -58,6 +61,7 @@ $(function(){
       $("#start_button").fadeIn(1000)
     },1000)
   })
+  iaeiy.initOptions();
 })
 
 iaeiy.init = function(){
@@ -130,7 +134,7 @@ iaeiy.selfPlayArea = {
   left: 15,
   up: 15,
   right: 495,
-  down: 595,
+  down: 545,
 }
 
 
@@ -259,9 +263,9 @@ iaeiy.checkCollisions = function(){
     iaeiy.player.y < iaeiy.karmaCreated[index].y + iaeiy.karmaCreated[index].height &&
     iaeiy.player.height + iaeiy.player.y > iaeiy.karmaCreated[index].y){
       var karmaToCheck= "#" + iaeiy.karmaCreated[index].karmaName;
-      iaeiy.levelTimer -= 10000
       $(karmaToCheck).remove();
       iaeiy.karmaCreated.splice(index,1);
+      iaeiy.levelTimer -= 10000;
     }
   })
 
@@ -274,10 +278,10 @@ iaeiy.checkCollisions = function(){
 iaeiy.purgeEnemies = function(){
   $($(iaeiy.enemiesCreated).get().reverse()).each(function(index){
     var enemyToCheck= "#" + iaeiy.enemiesCreated[index].enemyName
-    if ((iaeiy.selfPlayArea.left-20 >iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].duration < 0) ||
-      (iaeiy.selfPlayArea.right+20 < iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].duration < 0) ||
-      (iaeiy.selfPlayArea.up-20 > iaeiy.enemiesCreated[index].y && iaeiy.enemiesCreated[index].duration < 0) ||
-      (iaeiy.selfPlayArea.down+20 < iaeiy.enemiesCreated[index].y && iaeiy.enemiesCreated[index].duration < 0)){
+    if ((iaeiy.selfPlayArea.left-15 >iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].duration < 0) ||
+      (iaeiy.selfPlayArea.right+15 < iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].duration < 0) ||
+      (iaeiy.selfPlayArea.up-15 > iaeiy.enemiesCreated[index].y && iaeiy.enemiesCreated[index].duration < 0) ||
+      (iaeiy.selfPlayArea.down+15 < iaeiy.enemiesCreated[index].y && iaeiy.enemiesCreated[index].duration < 0)){
       $(enemyToCheck).remove();
     iaeiy.enemiesCreated.splice(index,1);
   }
@@ -291,7 +295,6 @@ iaeiy.purgeKarma = function(){
       (iaeiy.selfPlayArea.right+20 < iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].duration < 0) ||
       (iaeiy.selfPlayArea.up-20 > iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0) ||
       (iaeiy.selfPlayArea.down+20 < iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0)){
-      console.log("purge fired")
     $(karmaToCheck).remove();
     iaeiy.karmaCreated.splice(index,1);
   }
@@ -312,7 +315,7 @@ iaeiy.enemyCounter = 0
 iaeiy.Enemy = function (posX,posY,width,height,type,difficulty){
   var enemyName = "enemy" + iaeiy.enemyCounter
   iaeiy.enemyCounter++;
-  $(".self_area").append("<div id=\"" + enemyName + "\" class=enemy style=\" height:" + height + "px; width:" + width + "px; left:" + posX + "px;  top:" + posY + "px; position:fixed\"></div>")
+  $("#player").prepend("<div id=\"" + enemyName + "\" class=enemy style=\" height:" + height + "px; width:" + width + "px; left:" + posX + "px;  top:" + posY + "px; position:fixed\"></div>")
   this.x = posX
   this.y = posY 
   this.width = width
@@ -328,7 +331,7 @@ iaeiy.karmaCounter = 0
 iaeiy.Karma = function (posX,posY,type){
   var karmaName = "karma" + iaeiy.karmaCounter
   iaeiy.karmaCounter++;
-  $(".self_area").append("<div id=\"" + karmaName + "\" class=karma style=\" height:20px; width:20px; left:" + posX + "px;  top:" + posY + "px; position:fixed\"></div>")
+  $("#player").prepend("<div id=\"" + karmaName + "\" class=karma style=\" height:20px; width:20px; left:" + posX + "px;  top:" + posY + "px; position:fixed\"></div>")
   this.x = posX
   this.y = posY 
   this.width = 20
@@ -434,27 +437,61 @@ iaeiy.startLevel = function(diffic,spawnTimer){
   iaeiy.collisionThreshold = iaeiy.baseCollisionThreshold
 }
 
+
+//I played with this and how to do it better- this produces the most
+//consistant effect, unfortunately.
 iaeiy.updateBoard = function(){
-  $("#game_timer").html(iaeiy.levelTimer)
-    switch(iaeiy.lives){
-      case 4:
-      $("#health5").fadeOut()
-      break;
-      case 3:
-      $("#health4").fadeOut()
-      break;
-      case 2:
-      $("#health3").fadeOut()
-      break;
-      case 1:
-      $("#health2").fadeOut()
-      break;
-      case 0:
-      $("#health1").fadeOut()
-      break;
-      default:
-      console.log("life error detected")
-    }
+  $("#game_timer").html(iaeiy.timerName + iaeiy.levelTimer)
+  $("#karma_collected").html("Karma collected: " + iaeiy.karmaCollected)
+  $("#difficulty_display").html("Enemy speed:     " + iaeiy.levelDifficulty)
+  $("#spawn_delay").html("Spawn interval: " + iaeiy.levelSpawnTimer)
+  $("#max_size").html("Maximum size:    " + iaeiy.levelMaxSize)
+  switch(iaeiy.lives){
+    case 5:
+    $("#health5").fadeIn()
+    $('#health4').fadeIn()
+    $("#health3").fadeIn()
+    $("#health2").fadeIn()
+    $("#health1").fadeIn()
+    break;
+    case 4:
+    $("#health5").fadeOut()
+    $('#health4').fadeIn()
+    $("#health3").fadeIn()
+    $("#health2").fadeIn()
+    $("#health1").fadeIn()
+    break;
+    case 3:
+    $("#health5").fadeOut()
+    $("#health4").fadeOut()
+    $("#health3").fadeIn()
+    $("#health2").fadeIn()
+    $("#health1").fadeIn()
+    break;
+    case 2:
+    $("#health5").fadeOut()
+    $("#health4").fadeOut()
+    $("#health3").fadeOut()
+    $("#health2").fadeIn()
+    $("#health1").fadeIn()
+    break;
+    case 1:
+    $("#health5").fadeOut()
+    $("#health4").fadeOut()
+    $("#health3").fadeOut()
+    $("#health2").fadeOut()
+    $("#health1").fadeIn()
+    break;
+    case 0:
+    $("#health5").fadeOut()
+    $("#health4").fadeOut()
+    $("#health3").fadeOut()
+    $("#health2").fadeOut()
+    $("#health1").fadeOut()
+    break;
+    default:
+    console.log("life error detected")
+  }
 }
 
 iaeiy.endLevel = function(){
@@ -531,9 +568,8 @@ iaeiy.announcerRandomise = function(){
 iaeiy.levelWin = function(){
   if (iaeiy.levelVal !== 3){iaeiy.levelVal++};
   iaeiy.updateLevel(iaeiy.levelVal);
-
   $(".front").fadeIn(2000)
-  $("title").html("breathe once more")
+  $("title").html("take breath")
   $("#start_button").fadeIn(1000)
   iaeiy.announcerRandomise();
   $("#announcer").fadeIn(1000)
@@ -569,10 +605,6 @@ iaeiy.updateLevel = function(i){
   iaeiy.levelMaxSize = iaeiy.levelSettings[i].maxSize
 }
 
-
-
-
-
 //To test stuff
 $(function(){
   $("#button1").click(function(){
@@ -585,3 +617,28 @@ $(function(){
     iaeiy.levelOn = false
   })
 })
+
+var getInt = function(name){
+  parseInt($(name).html())
+}
+
+iaeiy.initOptions = function(){
+  console.log("options started")
+  $("#normal_option").click(function(){
+    $("#normal_option").removeClass("button_inactive")
+    $("#endless_option").addClass("button_inactive")
+    $(".endless_options").addClass("button_inactive")
+    $(".endless_options").slideUp()
+  })
+  $("#endless_option").click(function(){
+    $("#normal_option").addClass("button_inactive")
+    $("#endless_option").removeClass("button_inactive")
+    $(".endless_options").removeClass("button_inactive")
+    $(".endless_options").slideDown()
+  })
+  $(".option_button_up",0).click(function(){
+    if(!$("#endless_option").hasClass("button_inactive") && (parseInt($(diff_option_display).html())<=6) && (parseInt($(diff_option_display).html())>= 3)){
+      $(diff_option_display).html((parseInt($(diff_option_display).html())))
+    }
+  })
+}
