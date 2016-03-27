@@ -242,14 +242,14 @@ iaeiy.checkCollisions = function(){
   //check collisions
   $(iaeiy.enemiesCreated).each(function(index){
     if (iaeiy.player.x < iaeiy.enemiesCreated[index].x + iaeiy.enemiesCreated[index].width &&
-    iaeiy.player.x + iaeiy.player.width > iaeiy.enemiesCreated[index].x &&
-    iaeiy.player.y < iaeiy.enemiesCreated[index].y + iaeiy.enemiesCreated[index].height &&
-    iaeiy.player.height + iaeiy.player.y > iaeiy.enemiesCreated[index].y){
+      iaeiy.player.x + iaeiy.player.width > iaeiy.enemiesCreated[index].x &&
+      iaeiy.player.y < iaeiy.enemiesCreated[index].y + iaeiy.enemiesCreated[index].height &&
+      iaeiy.player.height + iaeiy.player.y > iaeiy.enemiesCreated[index].y){
       iaeiy.collisionThreshold = iaeiy.collisionThreshold - 2;
-    } else if (iaeiy.enemiesCreated.length === (index+1) && iaeiy.collisionThreshold < iaeiy.baseCollisionThreshold){
+  } else if (iaeiy.enemiesCreated.length === (index+1) && iaeiy.collisionThreshold < iaeiy.baseCollisionThreshold){
     iaeiy.collisionThreshold++
-    }
-  });
+  }
+});
 
   //decay threshold if above base
   if(iaeiy.collisionThreshold > iaeiy.baseCollisionThreshold){
@@ -259,15 +259,15 @@ iaeiy.checkCollisions = function(){
   //check karma collision
   $(iaeiy.karmaCreated).each(function(index){
     if (iaeiy.player.x < iaeiy.karmaCreated[index].x + iaeiy.karmaCreated[index].width &&
-    iaeiy.player.x + iaeiy.player.width > iaeiy.karmaCreated[index].x &&
-    iaeiy.player.y < iaeiy.karmaCreated[index].y + iaeiy.karmaCreated[index].height &&
-    iaeiy.player.height + iaeiy.player.y > iaeiy.karmaCreated[index].y){
+      iaeiy.player.x + iaeiy.player.width > iaeiy.karmaCreated[index].x &&
+      iaeiy.player.y < iaeiy.karmaCreated[index].y + iaeiy.karmaCreated[index].height &&
+      iaeiy.player.height + iaeiy.player.y > iaeiy.karmaCreated[index].y){
       var karmaToCheck= "#" + iaeiy.karmaCreated[index].karmaName;
-      $(karmaToCheck).remove();
-      iaeiy.karmaCreated.splice(index,1);
-      iaeiy.levelTimer -= 10000;
-    }
-  })
+    $(karmaToCheck).remove();
+    iaeiy.karmaCreated.splice(index,1);
+    iaeiy.levelTimer -= 10000;
+  }
+})
 
   if (iaeiy.collisionThreshold < 0){
     iaeiy.lives--;
@@ -295,7 +295,7 @@ iaeiy.purgeKarma = function(){
       (iaeiy.selfPlayArea.right+20 < iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].duration < 0) ||
       (iaeiy.selfPlayArea.up-20 > iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0) ||
       (iaeiy.selfPlayArea.down+20 < iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0)){
-    $(karmaToCheck).remove();
+      $(karmaToCheck).remove();
     iaeiy.karmaCreated.splice(index,1);
   }
 })
@@ -618,10 +618,25 @@ $(function(){
   })
 })
 
-var getInt = function(name){
-  parseInt($(name).html())
+var getIntId = function(name){
+  var idname = "#" + name;
+  return parseInt($(idname).html())
 }
 
+iaeiy.addValToId = function(name,valToAdd){
+ var idName = "#" + name;
+ var newVal = parseInt($(idName).html())
+ newVal += valToAdd
+ $(idName).html(newVal)
+}
+
+iaeiy.checkOptionValid = function(name,max,min){
+  if (!$("#endless_option").hasClass("button_inactive") && (getIntId(name)<max) && (getIntId(name)>min)){
+    return true
+  } else {return false}
+}
+
+//apologies for wet code- was tired when I wrote it
 iaeiy.initOptions = function(){
   console.log("options started")
   $("#normal_option").click(function(){
@@ -636,9 +651,34 @@ iaeiy.initOptions = function(){
     $(".endless_options").removeClass("button_inactive")
     $(".endless_options").slideDown()
   })
-  $(".option_button_up",0).click(function(){
-    if(!$("#endless_option").hasClass("button_inactive") && (parseInt($(diff_option_display).html())<=6) && (parseInt($(diff_option_display).html())>= 3)){
-      $(diff_option_display).html((parseInt($(diff_option_display).html())))
+  $($(".option_button_up")[0]).click(function(){
+    if(iaeiy.checkOptionValid("diff_option_display",6,2)){
+      iaeiy.addValToId("diff_option_display",1);
+    }
+  })
+  $($(".option_button_up")[1]).click(function(){
+    if(iaeiy.checkOptionValid("spawn_option_display",20,0)){
+      iaeiy.addValToId("spawn_option_display",5);
+    }
+  })
+  $($(".option_button_up")[2]).click(function(){
+    if(iaeiy.checkOptionValid("size_option_display",65,15)){
+      iaeiy.addValToId("size_option_display",5);
+    }
+  })
+  $($(".option_button_down")[0]).click(function(){
+    if(iaeiy.checkOptionValid("diff_option_display",7,3)){
+      iaeiy.addValToId("diff_option_display",-1);
+    }
+  })
+  $($(".option_button_down")[1]).click(function(){
+    if(iaeiy.checkOptionValid("spawn_option_display",25,5)){
+      iaeiy.addValToId("spawn_option_display",-5);
+    }
+  })
+  $($(".option_button_down")[2]).click(function(){
+    if(iaeiy.checkOptionValid("size_option_display",70,20)){
+      iaeiy.addValToId("size_option_display",-5);
     }
   })
 }
