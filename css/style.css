@@ -52,13 +52,47 @@ font-weight: bold;
 
 .neek_area{
   background-color: white;
-  border: 5px solid #CCE322;
+  border: 5px solid #00761A;
   border-radius: 3px;
   position: fixed;
   left: 530px;
   top: 210px;
   width: 400px;
   height: 350px;
+}
+
+.health_bar{
+  background-color: #00761A;
+  height: 50px;
+  width: 380px;
+  border-radius: 5px;
+  border: 5px solid #00761A;
+  position:fixed;
+}
+
+#health5{
+  top: 220px;
+  left: 540px;
+}
+
+#health4{
+  top: 290px;
+  left: 540px;
+}
+
+#health3{
+  top: 360px;
+  left: 540px;
+}
+
+#health2{
+  top: 430px;
+  left: 540px;
+}
+
+#health1{
+  top: 500px;
+  left: 540px;
 }
 
 #player {
@@ -68,6 +102,13 @@ font-weight: bold;
   background-color: #235399;
   height: 20px;
   width: 20px;
+ }
+
+ .karma{
+   background-color: #CCE322;
+   position: fixed;
+   width: 20px;
+   height: 20px
  }
 
 .enemy {
@@ -80,11 +121,11 @@ font-weight: bold;
 .scoreboard {
   position: fixed;
   background-color: white;
-  border: 5px solid #349244;
+  border: 5px solid #CCE322;
   border-radius: 3px;
   top:10px;
   left: 530px;
-  color: #349244;
+  color: #BC7103;
   height: 180px;
   width: 400px;
   font-size: 20px 
@@ -113,95 +154,64 @@ font-weight: bold;
   opacity: 0.2;
 }
 
-.karma{
-  background-color: #CCE322;
-  position: fixed;
-  width: 20px;
-  height: 20px
-}
 
-#health5{
-  background-color: #349244;
+
+.karma_bar{
+  background-color: #CCE322;  
   height: 20px;
   width: 60px;
-  border: 5px solid #349244;
+  border: 5px solid #CCE322;
   border-radius: 3px;
   position: fixed;
+}
+
+#karma5{
   left: 540px;
   top: 20px;
 }
 
-#health4{
-  background-color: #349244;
-  height: 20px;
-  width: 60px;
-  border: 5px solid #349244;
-  border-radius: 3px;
-  position: fixed;
+#karma4{
   left: 540px;
   top: 55px;
 }
-#health3{
-  background-color: #349244;
-  height: 20px;
-  width: 60px;
-  border: 5px solid #349244;
-  border-radius: 3px;
-  position: fixed;
+#karma3{
   left: 540px;
   top: 90px;
 }
-#health2{
-  background-color: #349244;
-  height: 20px;
-  width: 60px;
-  border: 5px solid #349244;
-  border-radius: 3px;
-  position: fixed;
+#karma2{
   left: 540px;
   top: 125px;
 }
-#health1{
-  background-color: #349244;
-  height: 20px;
-  width: 60px;
-  border: 5px solid #349244;
-  border-radius: 3px;
-  position: fixed;
+#karma1{
   left: 540px;
   top: 160px;
 }
 
 #game_timer{
-  color: #065914;
   position: fixed;
   left: 650px;
   top: 25px;
 }
 
 #karma_collected{
-  color: #065914;
   position: fixed;
   left: 650px;
   top: 165px;
 }
 
 #difficulty_display{
-  color: #065914;
   position: fixed;
   left: 650px;
   top: 60px;
 }
 
 #spawn_delay{
-  color: #065914;
   position: fixed;
   left: 650px;
   top: 95px;
 }
 
 #max_size{
-  color: #065914;
   position: fixed;
   left: 650px;
   top: 130px;

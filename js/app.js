@@ -10,35 +10,38 @@ iaeiy.baseCollisionThreshold = 3
 iaeiy.purgeInterval = null
 iaeiy.enemyCreationTimer=0
 iaeiy.karmaCollected=0
+iaeiy.karmaTimer = 60
 
 
-iaeiy.gameType = "normal"
+iaeiy.gameType = "challenge"
 iaeiy.levelVal = 0
 iaeiy.lives = 3
 iaeiy.levelTimer = 10000
 iaeiy.levelDifficulty = 4
 iaeiy.levelSpawnTimer = 20
 iaeiy.levelMaxSize = 20
+iaeiy.levelKarmaCollected = 0
 iaeiy.timerName = "Time remaining:  "
+iaeiy.karmaBaseDelay = 100
 
 iaeiy.levelSettings = [
 {lives :5,
-  timer: 10000,
+  timer: 20000,
   difficulty: 4,
   spawnTimer: 20,
   maxSize: 20
 },{lives :3,
-  timer: 10000,
+  timer: 50000,
   difficulty: 4,
   spawnTimer: 15,
   maxSize: 40
-},{lives :2,
-  timer: 10000,
+},{lives :3,
+  timer: 50000,
   difficulty: 5,
   spawnTimer: 10,
   maxSize: 50
-},{lives :1,
-  timer: 10000,
+},{lives :3,
+  timer: 250000,
   difficulty: 6,
   spawnTimer: 10,
   maxSize: 60
@@ -51,10 +54,11 @@ $(function(){
   $("#reset").click(function(){
     iaeiy.levelVal = 0
     iaeiy.lives = 3
-    iaeiy.levelTimer = 10000
+    iaeiy.levelTimer = 100000
     iaeiy.levelDifficulty = 4
     iaeiy.levelSpawnTimer = 20
     iaeiy.levelMaxSize = 20
+    iaeiy.karmaTimer = 60
     $("#start_button").fadeOut(1000)
     setTimeout(function(){
       $("#start_button").html("breathe in");
@@ -86,6 +90,7 @@ iaeiy.refreshFunction = function (){
     iaeiy.purgeKarma();
     iaeiy.enemyCreation();
     iaeiy.updateBoard();
+    iaeiy.setKarmaMultiplier();
     iaeiy.checkWinLose();
   }
 }
@@ -183,16 +188,16 @@ iaeiy.moveKarma = function(){
     var karmaName = "#" + iaeiy.karmaCreated[index].karmaName;
     switch (iaeiy.karmaCreated[index].type){
       case "up":
-      $(karmaName).animate({top: "+=3"}, 0);
+      $(karmaName).animate({top: "+=2"}, 0);
       break;
       case "down":
-      $(karmaName).animate({top: "-=3"}, 0);
+      $(karmaName).animate({top: "-=2"}, 0);
       break;
       case "left":
-      $(karmaName).animate({left: "+=3"}, 0);
+      $(karmaName).animate({left: "+=2"}, 0);
       break;
       case "right":
-      $(karmaName).animate({left: "-=3"}, 0);
+      $(karmaName).animate({left: "-=2"}, 0);
       break;
       case "wtf":
       var lolol = randomInt(4,1)
@@ -265,7 +270,12 @@ iaeiy.checkCollisions = function(){
       var karmaToCheck= "#" + iaeiy.karmaCreated[index].karmaName;
     $(karmaToCheck).remove();
     iaeiy.karmaCreated.splice(index,1);
-    iaeiy.levelTimer -= 10000;
+    iaeiy.karmaCollected++;
+    if (iaeiy.levelKarmaCollected < 5){
+      console.log("levelKarmaCollected")
+      console.log(iaeiy.levelKarmaCollected)
+      iaeiy.levelKarmaCollected++;
+    }
   }
 })
 
@@ -427,6 +437,13 @@ iaeiy.enemyCreation = function(){
       iaeiy.enemyCreationTimer = iaeiy.levelSpawnTimer
     }
     iaeiy.enemyCreationTimer--;
+  }
+  if (iaeiy.levelOn){
+    if (iaeiy.karmaTimer < 0){
+      iaeiy.createKarma()
+      iaeiy.karmaTimer = iaeiy.karmaBaseDelay
+    }
+    iaeiy.karmaTimer--;
   } 
 }
 
@@ -446,6 +463,11 @@ iaeiy.updateBoard = function(){
   $("#difficulty_display").html("Enemy speed:     " + iaeiy.levelDifficulty)
   $("#spawn_delay").html("Spawn interval: " + iaeiy.levelSpawnTimer)
   $("#max_size").html("Maximum size:    " + iaeiy.levelMaxSize)
+  iaeiy.updateHealth();
+  iaeiy.updateKarma();
+}
+
+iaeiy.updateHealth = function(){
   switch(iaeiy.lives){
     case 5:
     $("#health5").fadeIn()
@@ -494,6 +516,55 @@ iaeiy.updateBoard = function(){
   }
 }
 
+iaeiy.updateKarma = function(){
+  switch(iaeiy.levelKarmaCollected){
+    case 5:
+    $("#karma5").fadeIn()
+    $('#karma4').fadeIn()
+    $("#karma3").fadeIn()
+    $("#karma2").fadeIn()
+    $("#karma1").fadeIn()
+    break;
+    case 4:
+    $("#karma5").fadeOut()
+    $('#karma4').fadeIn()
+    $("#karma3").fadeIn()
+    $("#karma2").fadeIn()
+    $("#karma1").fadeIn()
+    break;
+    case 3:
+    $("#karma5").fadeOut()
+    $("#karma4").fadeOut()
+    $("#karma3").fadeIn()
+    $("#karma2").fadeIn()
+    $("#karma1").fadeIn()
+    break;
+    case 2:
+    $("#karma5").fadeOut()
+    $("#karma4").fadeOut()
+    $("#karma3").fadeOut()
+    $("#karma2").fadeIn()
+    $("#karma1").fadeIn()
+    break;
+    case 1:
+    $("#karma5").fadeOut()
+    $("#karma4").fadeOut()
+    $("#karma3").fadeOut()
+    $("#karma2").fadeOut()
+    $("#karma1").fadeIn()
+    break;
+    case 0:
+    $("#karma5").fadeOut()
+    $("#karma4").fadeOut()
+    $("#karma3").fadeOut()
+    $("#karma2").fadeOut()
+    $("#karma1").fadeOut()
+    break;
+    default:
+    console.log("karma error detected")
+  }
+}
+
 iaeiy.endLevel = function(){
   iaeiy.levelOn = false
 }
@@ -504,18 +575,52 @@ iaeiy.startGame = function(){
   $("#announcer").fadeOut(1000)
   $("title").html("it all ends in you")
   iaeiy.updateLevel(iaeiy.levelVal)
+  iaeiy.levelKarmaCollected = 0
   iaeiy.loadLevel();
 }
 
+iaeiy.karmaMultiplier = 1
+iaeiy.setKarmaMultiplier = function(){
+  switch (iaeiy.levelKarmaCollected){
+    case 5:
+    iaeiy.karmaMultiplier = 5
+    break;
+    case 4:
+    iaeiy.karmaMultiplier = 3
+    break;
+    case 3:
+    iaeiy.karmaMultiplier = 1.5
+    break;
+    case 2:
+    iaeiy.karmaMultiplier = 1
+    break;
+    case 1:
+    iaeiy.karmaMultiplier = 1
+    break;
+    case 0:
+    iaeiy.karmaMultiplier = 1
+    break;
+    default:
+    console.log ("karma multiplier error")
+  }
+}
+
+
 iaeiy.checkWinLose = function(){
-  iaeiy.levelTimer -=20;
   if(iaeiy.lives < 1){
     iaeiy.youLose();
     iaeiy.clearLevel();
-  } else if (iaeiy.levelTimer < 0){
+  };
+  if (gameType = "challenge"){
+  if (iaeiy.levelTimer < 0){
     iaeiy.levelWin();
     iaeiy.clearLevel();
   }
+  iaeiy.levelTimer -= (20*iaeiy.karmaMultiplier);
+  } else if (gameType = "endless"){
+    iaeiy.levelTimer += (20*iaeiy.karmaMultiplier)
+  }
+
 }
 
 iaeiy.youLose = function(){
@@ -605,19 +710,6 @@ iaeiy.updateLevel = function(i){
   iaeiy.levelMaxSize = iaeiy.levelSettings[i].maxSize
 }
 
-//To test stuff
-$(function(){
-  $("#button1").click(function(){
-    iaeiy.createKarma();
-  })
-})
-
-$(function(){
-  $("#button2").click(function(){
-    iaeiy.levelOn = false
-  })
-})
-
 var getIntId = function(name){
   var idname = "#" + name;
   return parseInt($(idname).html())
@@ -636,7 +728,6 @@ iaeiy.checkOptionValid = function(name,max,min){
   } else {return false}
 }
 
-//apologies for wet code- was tired when I wrote it
 iaeiy.initOptions = function(){
   console.log("options started")
   $("#normal_option").click(function(){
@@ -682,3 +773,21 @@ iaeiy.initOptions = function(){
     }
   })
 }
+
+
+
+
+
+
+//To test stuff
+$(function(){
+  $("#button1").click(function(){
+    iaeiy.createKarma();
+  })
+})
+
+$(function(){
+  $("#button2").click(function(){
+    iaeiy.levelOn = false
+  })
+})
