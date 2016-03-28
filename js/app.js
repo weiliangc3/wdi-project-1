@@ -310,7 +310,7 @@ iaeiy.checkCollisions = function(){
 
   //check karma collision
   $(iaeiy.karmaCreated).each(function(index){
-    if (iaeiy.player.x < iaeiy.karmaCreated[index].x + iaeiy.karmaCreated[index].width &&
+    if (iaeiy.player.x < iaeiy.karmaCreated[index].x + iaeiy.karmaCreated[index].width &&     //bugline
       iaeiy.player.x + iaeiy.player.width > iaeiy.karmaCreated[index].x &&
       iaeiy.player.y < iaeiy.karmaCreated[index].y + iaeiy.karmaCreated[index].height &&
       iaeiy.player.height + iaeiy.player.y > iaeiy.karmaCreated[index].y){
@@ -319,6 +319,7 @@ iaeiy.checkCollisions = function(){
     iaeiy.karmaCreated.splice(index,1);
     iaeiy.karmaCollected++;
     iaeiy.levelKarmaCollected++;
+    $("audio")[1].play();
     iaeiy.karmaDecayTimer = 300;
     iaeiy.playerKarmaAnimation();
     if (iaeiy.levelKarmaCollected > 5){
@@ -330,6 +331,7 @@ iaeiy.checkCollisions = function(){
   if (iaeiy.collisionThreshold < 0){
     iaeiy.lives--;
     iaeiy.playerDamageAnimation();
+    $("audio")[2].play();
     iaeiy.collisionThreshold = iaeiy.baseDamageDelay;
   }
 };
@@ -348,7 +350,7 @@ iaeiy.playerKarmaAnimation = function(){
 
 iaeiy.purgeEnemies = function(){
   $($(iaeiy.enemiesCreated).get().reverse()).each(function(index){
-    var enemyToCheck= "#" + iaeiy.enemiesCreated[index].enemyName
+    var enemyToCheck= "#" + iaeiy.enemiesCreated[index].enemyName   //BugLine
     if ((iaeiy.selfPlayArea.left-15 >iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].duration < 0) ||
       (iaeiy.selfPlayArea.right+15 < iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].duration < 0) ||
       (iaeiy.selfPlayArea.up-15 > iaeiy.enemiesCreated[index].y && iaeiy.enemiesCreated[index].duration < 0) ||
@@ -361,7 +363,7 @@ iaeiy.purgeEnemies = function(){
 
 iaeiy.purgeKarma = function(){
   $($(iaeiy.karmaCreated).get().reverse()).each(function(index){
-    var karmaToCheck= "#" + iaeiy.karmaCreated[index].karmaName
+    var karmaToCheck= "#" + iaeiy.karmaCreated[index].karmaName //BugLine
     if ((iaeiy.selfPlayArea.left-20 >iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].duration < 0) ||
       (iaeiy.selfPlayArea.right+20 < iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].duration < 0) ||
       (iaeiy.selfPlayArea.up-20 > iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0) ||
@@ -641,7 +643,7 @@ iaeiy.startGame = function(){
   $(".front").fadeOut(1000)
   $("#start_button").fadeOut(600)
   $("#announcer").fadeOut(1000)
-  $("title").html("it all ends in you")
+  $("title").html("be happy")
   $("audio")[0].play();
   iaeiy.updateLevel(iaeiy.levelVal)
   iaeiy.levelKarmaCollected = 0
@@ -696,6 +698,7 @@ iaeiy.youLose = function(){
   $(".front").fadeIn(5000)
   $("title").html("breathe again")
   iaeiy.announcerRandomise();
+  $("audio")[0].pause()
   $("#announcer").html("overconfidence.")
   if (iaeiy.gameType==="challenge"){
     $("#score_stat").html("you reached level " + (iaeiy.levelVal+1))
@@ -752,12 +755,12 @@ iaeiy.clearLevel = function(){
 
 iaeiy.clearBullets = function(){
   $($(iaeiy.enemiesCreated).get().reverse()).each(function(index){
-    var enemyToRemove= "#" + iaeiy.enemiesCreated[index].enemyName
+    var enemyToRemove= "#" + iaeiy.enemiesCreated[index].enemyName  //BugLine
     $(enemyToRemove).remove();
     iaeiy.enemiesCreated.splice(index,1);
   })
   $($(iaeiy.karmaCreated).get().reverse()).each(function(index){
-    var karmaToRemove= "#" + iaeiy.karmaCreated[index].karmaName
+    var karmaToRemove= "#" + iaeiy.karmaCreated[index].karmaName  //bugline?
     $(karmaToRemove).remove();
     iaeiy.karmaCreated.splice(index,1);
   })
@@ -783,13 +786,15 @@ iaeiy.levelWin = function(){
   $(".options").hide()
   if (iaeiy.levelVal === iaeiy.levelSettings.length-1){
     $("#announcer").html("confidence brings mastery. congratulations.")
-    $("#score_stat").html("challenge mode complete!")  
+    $("#score_stat").html("challenge mode complete!");
+    iaeiy.levelVal = 0;
+    $("#start_button").html("again?")  
   } else {
-  $("#announcer").html("success brings confidence")
-  $("#score_stat").html("next level: " + (iaeiy.levelVal+2))
-  }
-  if (iaeiy.levelVal !== iaeiy.levelSettings.length){iaeiy.levelVal++};
+  $("#announcer").html("success brings confidence");
+  $("#score_stat").html("next level: " + (iaeiy.levelVal+2));
   iaeiy.updateLevel(iaeiy.levelVal);
+  }
+  if (iaeiy.levelVal !== iaeiy.levelSettings.length){iaeiy.levelVal++};;
 }
 
 iaeiy.updateLevel = function(i){
