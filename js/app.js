@@ -23,8 +23,8 @@ iaeiy.levelKarmaCollected = 1
 iaeiy.timerName = "time remaining:  "
 iaeiy.karmaBaseDelay = 100
 
-iaeiy.karmaDecayTimer = 170
-iaeiy.karmaBaseDecay = 170
+iaeiy.karmaDecayTimer = 80
+iaeiy.karmaBaseDecay = 80
 
 iaeiy.levelSettings = [
 {lives :5,
@@ -32,17 +32,17 @@ iaeiy.levelSettings = [
   difficulty: 4,
   spawnTimer: 20,
   maxSize: 20
-},{lives :3,
+},{lives :5,
   timer: 50000,
   difficulty: 4,
   spawnTimer: 15,
   maxSize: 40
-},{lives :3,
+},{lives :5,
   timer: 100000,
   difficulty: 5,
   spawnTimer: 10,
   maxSize: 50
-},{lives :3,
+},{lives :5,
   timer: 250000,
   difficulty: 6,
   spawnTimer: 10,
@@ -400,7 +400,6 @@ iaeiy.Enemy = function (posX,posY,width,height,type,difficulty){
 iaeiy.karmaCounter = 0
 
 iaeiy.Karma = function (posX,posY,type){
-  console.log("Karma ")
   var karmaName = "karma" + iaeiy.karmaCounter
   iaeiy.karmaCounter++;
   $("#player").prepend("<div id=\"" + karmaName + "\" class=karma style=\" height:20px; width:20px; left:" + posX + "px;  top:" + posY + "px; position:fixed\"></div>")
@@ -532,10 +531,6 @@ iaeiy.karmaDecay = function(){
 //consistant effect, unfortunately.
 iaeiy.updateBoard = function(){
   $("#game_timer").html(iaeiy.timerName + iaeiy.levelTimer)
-  $("#karma_collected").html("karma collected: " + iaeiy.karmaCollected)
-  $("#difficulty_display").html("enemy speed:     " + iaeiy.levelDifficulty)
-  $("#spawn_delay").html("spawn interval: " + iaeiy.levelSpawnTimer)
-  $("#max_size").html("maximum size:    " + iaeiy.levelMaxSize)
   iaeiy.updateHealth();
   iaeiy.updateKarma();
 }
