@@ -1,8 +1,7 @@
 body{
   background-color: white;
-  font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+  font-family: Verdana, Geneva, sans-serif;
 -webkit-font-smoothing: antialiased;
-font-weight: bold;
 }
 
 .front{
@@ -323,7 +322,7 @@ font-weight: bold;
   bottom: 3px;
   left:3px;
   height:20px;
-  width: 110px;
+  width: 100px;
   padding: 4px;
   cursor: pointer;
 }
@@ -374,7 +373,7 @@ font-weight: bold;
   bottom: 3px;
   left:3px;
   height:20px;
-  width: 150px;
+  width: 120px;
   padding: 4px;
 }
 
@@ -386,13 +385,32 @@ font-weight: bold;
   opacity: 0.2;
 }
 
-.karma_doge{
-  background-image: url("/assets/dogesmile.png");
+.karma_flash{
+  font-weight: normal;
+  color: #CCE322;
+  font-size: 200px;
   background-position: center;
   background-repeat: no-repeat;
   position: fixed;
+  line-height: 600px;
+  opacity:0.2;
   left: 15px;
   top: 15px;
   width: 500px;
   height:550px;
+  text-align:center;
 }
+
+#dogemode{
+  position: fixed;
+  background-color: #D54898;
+  bottom: 3px;
+  right: 3px;
+  height: 20px;
+  width: 110px;
+  padding: 4px;
+  cursor: pointer;
+}
+
+
+/*background-image: url("/assets/dogesmile.png");*/
