@@ -328,9 +328,15 @@ iaeiy.checkCollisions = function(){
 
   if (iaeiy.collisionThreshold < 0){
     iaeiy.lives--;
+    iaeiy.playerDamageAnimation();
     iaeiy.collisionThreshold = iaeiy.baseDamageDelay;
   }
 };
+
+iaeiy.playerDamageAnimation = function(){
+  $(".damage_flash").fadeIn(100)
+  setTimeout(function(){$(".damage_flash").fadeOut(100)},50)
+}
 
 iaeiy.purgeEnemies = function(){
   $($(iaeiy.enemiesCreated).get().reverse()).each(function(index){
@@ -582,6 +588,7 @@ iaeiy.updateKarma = function(){
     $("#karma_bar3").fadeIn()
     $("#karma_bar2").fadeIn()
     $("#karma_bar1").fadeIn()
+    $(".karma_doge").fadeTo(500,0.25)
     break;
     case 4:
     $("#karma_bar5").fadeOut()
@@ -589,6 +596,7 @@ iaeiy.updateKarma = function(){
     $("#karma_bar3").fadeIn()
     $("#karma_bar2").fadeIn()
     $("#karma_bar1").fadeIn()
+    $(".karma_doge").fadeTo(20,0.2)
     break;
     case 3:
     $("#karma_bar5").fadeOut()
@@ -596,6 +604,7 @@ iaeiy.updateKarma = function(){
     $("#karma_bar3").fadeIn()
     $("#karma_bar2").fadeIn()
     $("#karma_bar1").fadeIn()
+    $(".karma_doge").fadeTo(20,0.15)
     break;
     case 2:
     $("#karma_bar5").fadeOut()
@@ -603,6 +612,7 @@ iaeiy.updateKarma = function(){
     $("#karma_bar3").fadeOut()
     $("#karma_bar2").fadeIn()
     $("#karma_bar1").fadeIn()
+    $(".karma_doge").fadeTo(20,0.1)
     break;
     case 1:
     $("#karma_bar5").fadeOut()
@@ -610,6 +620,7 @@ iaeiy.updateKarma = function(){
     $("#karma_bar3").fadeOut()
     $("#karma_bar2").fadeOut()
     $("#karma_bar1").fadeIn()
+    $(".karma_doge").fadeTo(20,0.05)
     break;
     case 0:
     $("#karma_bar5").fadeOut()
@@ -617,6 +628,7 @@ iaeiy.updateKarma = function(){
     $("#karma_bar3").fadeOut()
     $("#karma_bar2").fadeOut()
     $("#karma_bar1").fadeOut()
+    $(".karma_doge").fadeTo(20,0.001)
     break;
     default:
     console.log("karma error detected")
@@ -726,6 +738,8 @@ iaeiy.loadLevel = function(){
   $("#karma_bar2").fadeOut()
   $("#karma_bar1").fadeOut()
   $("#reset").hide()
+  $(".damage_flash").hide()
+  $("instructions").hide()
 }
 
 iaeiy.clearLevel = function(){
