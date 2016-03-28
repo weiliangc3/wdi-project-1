@@ -310,20 +310,22 @@ iaeiy.checkCollisions = function(){
 
   //check karma collision
   $(iaeiy.karmaCreated).each(function(index){
-    if (iaeiy.player.x < iaeiy.karmaCreated[index].x + iaeiy.karmaCreated[index].width &&     //bugline
-      iaeiy.player.x + iaeiy.player.width > iaeiy.karmaCreated[index].x &&
-      iaeiy.player.y < iaeiy.karmaCreated[index].y + iaeiy.karmaCreated[index].height &&
-      iaeiy.player.height + iaeiy.player.y > iaeiy.karmaCreated[index].y){
-      var karmaToCheck= "#" + iaeiy.karmaCreated[index].karmaName;
-    $(karmaToCheck).remove();
-    iaeiy.karmaCreated.splice(index,1);
-    iaeiy.karmaCollected++;
-    iaeiy.levelKarmaCollected++;
-    $("audio")[1].play();
-    iaeiy.karmaDecayTimer = 300;
-    iaeiy.playerKarmaAnimation();
-    if (iaeiy.levelKarmaCollected > 5){
-      iaeiy.levelKarmaCollected = 5
+    if (!!iaeiy.karmaCreated[index]){
+      if (iaeiy.player.x < iaeiy.karmaCreated[index].x + iaeiy.karmaCreated[index].width &&     //bugline
+        iaeiy.player.x + iaeiy.player.width > iaeiy.karmaCreated[index].x &&
+        iaeiy.player.y < iaeiy.karmaCreated[index].y + iaeiy.karmaCreated[index].height &&
+        iaeiy.player.height + iaeiy.player.y > iaeiy.karmaCreated[index].y){
+        var karmaToCheck= "#" + iaeiy.karmaCreated[index].karmaName;
+      $(karmaToCheck).remove();
+      iaeiy.karmaCreated.splice(index,1);
+      iaeiy.karmaCollected++;
+      iaeiy.levelKarmaCollected++;
+      $("audio")[1].play();
+      iaeiy.karmaDecayTimer = 300;
+      iaeiy.playerKarmaAnimation();
+      if (iaeiy.levelKarmaCollected > 5){
+        iaeiy.levelKarmaCollected = 5
+      }
     }
   }
 })
@@ -350,26 +352,30 @@ iaeiy.playerKarmaAnimation = function(){
 
 iaeiy.purgeEnemies = function(){
   $($(iaeiy.enemiesCreated).get().reverse()).each(function(index){
-    var enemyToCheck= "#" + iaeiy.enemiesCreated[index].enemyName   //BugLine
-    if ((iaeiy.selfPlayArea.left-15 >iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].duration < 0) ||
-      (iaeiy.selfPlayArea.right+15 < iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].duration < 0) ||
-      (iaeiy.selfPlayArea.up-15 > iaeiy.enemiesCreated[index].y && iaeiy.enemiesCreated[index].duration < 0) ||
-      (iaeiy.selfPlayArea.down+15 < iaeiy.enemiesCreated[index].y && iaeiy.enemiesCreated[index].duration < 0)){
-      $(enemyToCheck).remove();
-    iaeiy.enemiesCreated.splice(index,1);
-  }
-})
+    if (!!iaeiy.enemiesCreated[index]){
+     var enemyToCheck= "#" + iaeiy.enemiesCreated[index].enemyName   //BugLine
+      if ((iaeiy.selfPlayArea.left-15 >iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].duration < 0) ||
+        (iaeiy.selfPlayArea.right+15 < iaeiy.enemiesCreated[index].x && iaeiy.enemiesCreated[index].duration < 0) ||
+        (iaeiy.selfPlayArea.up-15 > iaeiy.enemiesCreated[index].y && iaeiy.enemiesCreated[index].duration < 0) ||
+        (iaeiy.selfPlayArea.down+15 < iaeiy.enemiesCreated[index].y && iaeiy.enemiesCreated[index].duration < 0)){
+        $(enemyToCheck).remove();
+        iaeiy.enemiesCreated.splice(index,1);
+      }
+    }
+  })
 }
 
 iaeiy.purgeKarma = function(){
   $($(iaeiy.karmaCreated).get().reverse()).each(function(index){
-    var karmaToCheck= "#" + iaeiy.karmaCreated[index].karmaName //BugLine
-    if ((iaeiy.selfPlayArea.left-20 >iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].duration < 0) ||
-      (iaeiy.selfPlayArea.right+20 < iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].duration < 0) ||
-      (iaeiy.selfPlayArea.up-20 > iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0) ||
-      (iaeiy.selfPlayArea.down+20 < iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0)){
-      $(karmaToCheck).remove();
-      iaeiy.karmaCreated.splice(index,1);
+    if (!!iaeiy.karmaCreated[index]){
+      var karmaToCheck= "#" + iaeiy.karmaCreated[index].karmaName //BugLine
+      if ((iaeiy.selfPlayArea.left-20 >iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].duration < 0) ||
+        (iaeiy.selfPlayArea.right+20 < iaeiy.karmaCreated[index].x && iaeiy.karmaCreated[index].duration < 0) ||
+       (iaeiy.selfPlayArea.up-20 > iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0) ||
+        (iaeiy.selfPlayArea.down+20 < iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0)){
+        $(karmaToCheck).remove();
+        iaeiy.karmaCreated.splice(index,1);
+      }
     }
   })
 }
@@ -672,7 +678,6 @@ iaeiy.setKarmaMultiplier = function(){
     iaeiy.karmaMultiplier = 1
     break;
     default:
-    console.log ("karma multiplier error")
   }
 }
 
@@ -755,16 +760,18 @@ iaeiy.clearLevel = function(){
 
 iaeiy.clearBullets = function(){
   $($(iaeiy.enemiesCreated).get().reverse()).each(function(index){
-    var enemyToRemove= "#" + iaeiy.enemiesCreated[index].enemyName  //BugLine
-    $(enemyToRemove).remove();
-    iaeiy.enemiesCreated.splice(index,1);
+    if (!!iaeiy.enemiesCreated[index]) {var enemyToRemove= "#" + iaeiy.enemiesCreated[index].enemyName 
+      $(enemyToRemove).remove();
+      iaeiy.enemiesCreated.splice(index,1);
+    }
   })
   $($(iaeiy.karmaCreated).get().reverse()).each(function(index){
+    if (!!iaeiy.karmaCreated[index]){
     var karmaToRemove= "#" + iaeiy.karmaCreated[index].karmaName  //bugline?
     $(karmaToRemove).remove();
     iaeiy.karmaCreated.splice(index,1);
+  }
   })
-  console.log("clearing")
 }
 
 iaeiy.announcerRandomise = function(){
