@@ -11,11 +11,11 @@
   <div class="self_area"></div>
   <div id="buffer"></div>
   <div class="scoreboard">
-    <div id="karma1" class="karma_bar"></div>
-    <div id="karma2" class="karma_bar"></div>
-    <div id="karma3" class="karma_bar"></div>
-    <div id="karma4" class="karma_bar"></div>
-    <div id="karma5" class="karma_bar"></div>
+    <div id="karma_bar1" class="karma_bar"></div>
+    <div id="karma_bar2" class="karma_bar"></div>
+    <div id="karma_bar3" class="karma_bar"></div>
+    <div id="karma_bar4" class="karma_bar"></div>
+    <div id="karma_bar5" class="karma_bar"></div>
     <div id="game_timer">Time Remaining: </div>
     <div id="difficulty_display">Difficulty:</div>
     <div id="spawn_delay">Spawn Delay:</div>
@@ -64,12 +64,30 @@
     </div>
     <div id="announcer"></div>
     <ul class="stats_board">
-      <li id="score_stat">use arrow keys or wasd to dodge red anger bullets</li>
-      <li id="karma_stat">charge your point multiplier with yellow karma</li>
-      <li id="comment">good luck</li>
+      <li id="score_stat"></li>
+      <li id="karma_stat"></li>
+      <li id="comment"></li>
     </ul>
 
-
-
+    <div id="instructions" class="button_inactive">how to play</div>
+    <div class="instruction_panel">
+        <div class="main_instruction">
+        <p>Avoid red anger boxes</p>
+        <p>Collect yellow karma</p>
+        </div>
+        <div class="detail_instruction">
+        <p>Yellow karma fills the karma bar. Fill the karma bar for a huge point multiplier</p>
+        <p>Your karma bar decreases over time, so keep going for karma, if you can</p>
+        <p>The green bar is your health, you only have once chance, so be careful</p>
+        <p>In Challenge mode, you must reach a certain amount of points to get to the next stage</p>
+        <p>In Endless mode, try to reach as high a score as possible
+        </div>
+        <div class="last_instructions">
+        <p>Good luck and remember</p>
+        <h2>It all ends in you</h2>
+        </div>
+        <div id="return_to_main">return to main</div>
+      </div>
+    </div>
     </body>
     </html>

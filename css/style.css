@@ -164,24 +164,24 @@ font-weight: bold;
   position: fixed;
 }
 
-#karma5{
+#karma_bar5{
   left: 540px;
   top: 20px;
 }
 
-#karma4{
+#karma_bar4{
   left: 540px;
   top: 55px;
 }
-#karma3{
+#karma_bar3{
   left: 540px;
   top: 90px;
 }
-#karma2{
+#karma_bar2{
   left: 540px;
   top: 125px;
 }
-#karma1{
+#karma_bar1{
   left: 540px;
   top: 160px;
 }
@@ -218,6 +218,7 @@ font-weight: bold;
 
 .options{
   position:fixed;
+  display:hidden;
   font-size:13px;
   right: 5px;
   top: 5px;
@@ -229,7 +230,7 @@ font-weight: bold;
 
 .mode_button{
   line-height: 20px;
-  background-color: #E82D23;
+  background-color: #E60046;
   height: 20px;
   margin: 2px;
   display:block;
@@ -273,11 +274,11 @@ font-weight: bold;
 .endless_set{
   text-align: left;
   line-height: 20px;
-  background-color: #E82D23;
+  background-color: #E60046;
   height: 20px;
-  width: 190px;
+  width: 185px;
   margin: 5px;
-  padding: 2px;
+  padding-left: 5px;
   position: relative;
   display: block;
 }
@@ -301,4 +302,78 @@ font-weight: bold;
   left: 0px;
   bottom: 20px;
   list-style: none;
+}
+
+#title1{
+  position: fixed;
+  top:0px;
+}
+#title2{
+  position: fixed;
+  top:15px;
+}
+#title3{
+  position: fixed;
+  top:30px;
+}
+
+#instructions{
+  position: fixed;
+  background-color: #235AC6;
+  bottom: 3px;
+  left:3px;
+  height:20px;
+  width: 110px;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.instruction_panel{
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+.main_instruction{
+  background-color: #FFB67A;
+  font-size: 25px;
+  margin: 5px auto;
+  width: 340px;
+  padding: 0px 5px 0px 5px;
+  border-radius: 2px;
+  text-align: center;
+  color: #2C2C2C;
+}
+
+.main_instruction p{ 
+  margin:3px;
+}
+
+.detail_instruction{
+  font-size: 15px;
+  font-weight: normal;
+  width: 60%;
+  margin: 10px auto;
+  padding:10px;
+}
+
+.last_instructions{
+  color: #2C2C2C;
+  text-align: right;
+}
+
+#return_to_main{
+  position:fixed;
+  left: 0;
+  bottom:0;
+  background-color: #235AC6;
+  cursor: pointer;
+  bottom: 3px;
+  left:3px;
+  height:20px;
+  width: 150px;
+  padding: 4px;
 }

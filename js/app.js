@@ -12,7 +12,6 @@ iaeiy.enemyCreationTimer=0
 iaeiy.karmaCollected=0
 iaeiy.karmaTimer = 60
 
-
 iaeiy.gameType = "challenge"
 iaeiy.levelVal = 0
 iaeiy.lives = 3
@@ -23,6 +22,9 @@ iaeiy.levelMaxSize = 20
 iaeiy.levelKarmaCollected = 1
 iaeiy.timerName = "Time remaining:  "
 iaeiy.karmaBaseDelay = 100
+
+iaeiy.karmaDecayTimer = 170
+iaeiy.karmaBaseDecay = 170
 
 iaeiy.levelSettings = [
 {lives :5,
@@ -36,7 +38,7 @@ iaeiy.levelSettings = [
   spawnTimer: 15,
   maxSize: 40
 },{lives :3,
-  timer: 50000,
+  timer: 100000,
   difficulty: 5,
   spawnTimer: 10,
   maxSize: 50
@@ -48,6 +50,31 @@ iaeiy.levelSettings = [
 }]
 
 $(function(){
+  iaeiy.introAnimations();
+  iaeiy.mainScreenOn();
+})
+
+iaeiy.introAnimations = function(){
+  $(".options").hide();
+  $("#start_button").hide();
+  $("#reset").hide();
+  $("#instructions").hide();
+  iaeiy.swooshFromRight("#title1","50%","40%","0%")
+  iaeiy.swooshFromRight("#title2","55%","38%","0%")
+  iaeiy.swooshFromRight("#title3","70%","60%","0%") //1500
+  setTimeout(function(){$(".options").fadeIn(400)},1500)
+  setTimeout(function(){$("#start_button").fadeIn(400)},1700)
+  setTimeout(function(){$("#instructions").fadeIn(400)},1900)
+}
+
+iaeiy.swooshFromRight = function(object,hangP1,hangP2,finalP){
+  $(object).attr("style","left: 120%");
+  setTimeout($(object).animate({left: hangP1}, 200),100);
+  setTimeout($(object).animate({left: hangP2}, 1000),300)
+  setTimeout($(object).animate({left: finalP}, 200),1300)
+}
+
+iaeiy.mainScreenOn = function (){
   $("#start_button").click(function(){
     iaeiy.init();
   })
@@ -62,16 +89,35 @@ $(function(){
     $("#start_button").fadeOut(1000)
     setTimeout(function(){
       $("#start_button").html("to the start");
-      $("#start_button").fadeIn(1000)
+      $("#start_button").fadeIn(1000);
+      $(".options").fadeIn();
+      $("#reset").fadeOut(1000)
     },1000)
   })
-  iaeiy.initOptions();
-})
+  $(".instruction_panel").hide();
+  $("#instructions").click(function(){
+    $(".instruction_panel").fadeIn(800);
+  })
+  $("#return_to_main").click(function(){
+    $(".instruction_panel").fadeOut(800);
+  })
+  $("#instructions").hover(function(){
+    $(this).removeClass("button_inactive")
+  }, function(){
+    $(this).addClass("button_inactive")
+  })
+  $("#return_to_main").hover(function(){
+    $(this).removeClass("button_inactive")
+  }, function(){
+    $(this).addClass("button_inactive")
+  })
+  iaeiy.initOptions();  
+}
 
 iaeiy.init = function(){
   iaeiy.levelOn = false
   iaeiy.startGame();
-  iaeiy.initButtons()
+  iaeiy.initButtons();
 }
 
 iaeiy.initButtons = function(){
@@ -89,6 +135,7 @@ iaeiy.refreshFunction = function (){
     iaeiy.purgeEnemies();
     iaeiy.purgeKarma();
     iaeiy.enemyCreation();
+    iaeiy.karmaDecay();
     iaeiy.updateBoard();
     iaeiy.setKarmaMultiplier();
     iaeiy.checkWinLose();
@@ -272,10 +319,10 @@ iaeiy.checkCollisions = function(){
     iaeiy.karmaCreated.splice(index,1);
     iaeiy.karmaCollected++;
     iaeiy.levelKarmaCollected++;
+    iaeiy.karmaDecayTimer = 300;
     if (iaeiy.levelKarmaCollected > 5){
       iaeiy.levelKarmaCollected = 5
     }
-    console.log(iaeiy.levelKarmaCollected);
   }
 })
 
@@ -306,13 +353,9 @@ iaeiy.purgeKarma = function(){
       (iaeiy.selfPlayArea.up-20 > iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0) ||
       (iaeiy.selfPlayArea.down+20 < iaeiy.karmaCreated[index].y && iaeiy.karmaCreated[index].duration < 0)){
       $(karmaToCheck).remove();
-    iaeiy.karmaCreated.splice(index,1);
-    if (iaeiy.levelKarmaCollected > 0){
-      iaeiy.levelKarmaCollected--;
-      console.log("lost karma")
+      iaeiy.karmaCreated.splice(index,1);
     }
-  }
-})
+  })
 }
 
 iaeiy.player = {
@@ -343,6 +386,7 @@ iaeiy.Enemy = function (posX,posY,width,height,type,difficulty){
 iaeiy.karmaCounter = 0
 
 iaeiy.Karma = function (posX,posY,type){
+  console.log("Karma fired")
   var karmaName = "karma" + iaeiy.karmaCounter
   iaeiy.karmaCounter++;
   $("#player").prepend("<div id=\"" + karmaName + "\" class=karma style=\" height:20px; width:20px; left:" + posX + "px;  top:" + posY + "px; position:fixed\"></div>")
@@ -458,6 +502,16 @@ iaeiy.startLevel = function(diffic,spawnTimer){
   iaeiy.collisionThreshold = iaeiy.baseCollisionThreshold
 }
 
+iaeiy.karmaDecay = function(){
+  iaeiy.karmaDecayTimer--;
+  if (iaeiy.karmaDecayTimer < 0 && iaeiy.levelKarmaCollected > 0){
+    iaeiy.levelKarmaCollected--;
+    iaeiy.karmaDecayTimer = iaeiy.karmaBaseDecay; 
+  }
+  if (iaeiy.levelKarmaCollected === 0){
+    iaeiy.karmaDecayTimer = iaeiy.karmaBaseDecay
+  }
+}
 
 //I played with this and how to do it better- this produces the most
 //consistant effect, unfortunately.
@@ -523,46 +577,46 @@ iaeiy.updateHealth = function(){
 iaeiy.updateKarma = function(){
   switch(iaeiy.levelKarmaCollected){
     case 5:
-    $("#karma5").fadeIn()
-    $('#karma4').fadeIn()
-    $("#karma3").fadeIn()
-    $("#karma2").fadeIn()
-    $("#karma1").fadeIn()
+    $("#karma_bar5").fadeIn()
+    $('#karma_bar4').fadeIn()
+    $("#karma_bar3").fadeIn()
+    $("#karma_bar2").fadeIn()
+    $("#karma_bar1").fadeIn()
     break;
     case 4:
-    $("#karma5").fadeOut()
-    $('#karma4').fadeIn()
-    $("#karma3").fadeIn()
-    $("#karma2").fadeIn()
-    $("#karma1").fadeIn()
+    $("#karma_bar5").fadeOut()
+    $('#karma_bar4').fadeIn()
+    $("#karma_bar3").fadeIn()
+    $("#karma_bar2").fadeIn()
+    $("#karma_bar1").fadeIn()
     break;
     case 3:
-    $("#karma5").fadeOut()
-    $("#karma4").fadeOut()
-    $("#karma3").fadeIn()
-    $("#karma2").fadeIn()
-    $("#karma1").fadeIn()
+    $("#karma_bar5").fadeOut()
+    $("#karma_bar4").fadeOut()
+    $("#karma_bar3").fadeIn()
+    $("#karma_bar2").fadeIn()
+    $("#karma_bar1").fadeIn()
     break;
     case 2:
-    $("#karma5").fadeOut()
-    $("#karma4").fadeOut()
-    $("#karma3").fadeOut()
-    $("#karma2").fadeIn()
-    $("#karma1").fadeIn()
+    $("#karma_bar5").fadeOut()
+    $("#karma_bar4").fadeOut()
+    $("#karma_bar3").fadeOut()
+    $("#karma_bar2").fadeIn()
+    $("#karma_bar1").fadeIn()
     break;
     case 1:
-    $("#karma5").fadeOut()
-    $("#karma4").fadeOut()
-    $("#karma3").fadeOut()
-    $("#karma2").fadeOut()
-    $("#karma1").fadeIn()
+    $("#karma_bar5").fadeOut()
+    $("#karma_bar4").fadeOut()
+    $("#karma_bar3").fadeOut()
+    $("#karma_bar2").fadeOut()
+    $("#karma_bar1").fadeIn()
     break;
     case 0:
-    $("#karma5").fadeOut()
-    $("#karma4").fadeOut()
-    $("#karma3").fadeOut()
-    $("#karma2").fadeOut()
-    $("#karma1").fadeOut()
+    $("#karma_bar5").fadeOut()
+    $("#karma_bar4").fadeOut()
+    $("#karma_bar3").fadeOut()
+    $("#karma_bar2").fadeOut()
+    $("#karma_bar1").fadeOut()
     break;
     default:
     console.log("karma error detected")
@@ -638,6 +692,7 @@ iaeiy.youLose = function(){
     $("#comment").html("you were " + iaeiy.levelTimer + " points from the end")
     iaeiy.karmaCollected = 0;
     iaeiy.levelVal = 0;
+    $(".options").fadeIn();
   } else if (iaeiy.gameType==="endless"){
     $("#score_stat").html("score reached: " + iaeiy.levelTimer)
     $("#karma_stat").html("karma collected: " + iaeiy.karmaCollected)
@@ -665,11 +720,12 @@ iaeiy.loadLevel = function(){
     iaeiy.lives = 5;
     iaeiy.levelOn = true
   }
-  $("#karma5").fadeOut()
-  $('#karma4').fadeOut()
-  $("#karma3").fadeOut()
-  $("#karma2").fadeOut()
-  $("#karma1").fadeOut()
+  $("#karma_bar5").fadeOut()
+  $('#karma_bar4').fadeOut()
+  $("#karma_bar3").fadeOut()
+  $("#karma_bar2").fadeOut()
+  $("#karma_bar1").fadeOut()
+  $("#reset").hide()
 }
 
 iaeiy.clearLevel = function(){
@@ -709,6 +765,8 @@ iaeiy.levelWin = function(){
   $("#start_button").html("next stage")
   $("#karma_stat").html("karma collected: " + iaeiy.karmaCollected)
   $("#comment").html("prepare yourself")
+  $("#reset").fadeIn()
+  $(".options").hide()
   if (iaeiy.levelVal === iaeiy.levelSettings.length-1){
     $("#announcer").html("confidence brings mastery. congratulations.")
     $("#score_stat").html("challenge mode complete!")  
