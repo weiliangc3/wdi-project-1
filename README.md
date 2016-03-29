@@ -1,6 +1,6 @@
 #blocks that move.
 
-Blocks that move is a bullet-hell dodging style game, taking inspiration from the flat design that's become ubiquitious these days and bullet dodging games like Ikuruga or Tohou games. I built this game as my first project in of General Assembly's Web Development Immersive programme.
+Blocks that move is a bullet-hell dodging style game, merging bullet dodging games like Ikuruga or Tohou games and modern day flat design aesthetics. I built this game as my first project in of General Assembly's Web Development Immersive programme.
 
 
 
@@ -32,7 +32,7 @@ The assignment was to:
 
 ##Technical and Design Choices
 
-I chose a bullet hell game because of the complexity of collision mechanics, and my own personal fondness for dexterity based arcade games. After experimenting with colours and sounds I decided a light experience, using sans-serif fonts and primary colours paying homage to modern day flat design and 20th century modern artist Piet Mondrian gave a much more positive experience.
+I chose a bullet hell game because of the complexity of collision mechanics, and my own personal fondness for dexterity based arcade games. After experimenting with colours and sounds I decided a design emphasising white space, using sans-serif fonts and primary colours would give a much more positive experience. In particular,  modern day flat design and 20th century modern artist Piet Mondrian influenced my design and color choices.
 
 While using HTML canvas or using dedicated Javascript game-making libraries may have provided a more elegant animation and collision solution, I chose instead to use purely Javascript and CSS to demonstrate technical skill.
 
@@ -51,6 +51,12 @@ Making an endless mode and creating randomised enemies was an early design decis
 ###Karma and reward systems 
 
 While the game is quite fun without karma, I decided that adding a reward system to the game would add an extra level of tension and fun. Visually, karma was designed to look appealing, and provide clear positive auditory and visual feedback to the player. A bar was added simply to help reinforce the positive feedback, and karma decay was introduced to maintain tension of collecting the gold karma.
+
+###Abandoned ideas
+
+Original designs of the game included a second screen that would require the player to click coloured boxes in order to spawn karma on the other screen. In early play-testing, the added functionality proved too challenging and made the game too inaccessible and complex for most people.
+
+Another idea that was tested enabled the player to attack the red boxes. This incentivised aggressive play from the player, and thematically did not fit with the light hearted friendly theme of the game, so it too was abandoned in favour of keeping the game thematically consistent.
 
 ##Resources
 Music is from Music : Pamgaea Kevin MacLeod (incompetech.com)
