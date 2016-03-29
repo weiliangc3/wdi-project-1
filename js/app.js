@@ -898,19 +898,3 @@ iaeiy.initOptions = function(){
     $(this).addClass("button_inactive")
   })
 }
-
-// iaeiy.dogeModeOn = false
-
-// iaeiy.dogeRLY = function(){
-//   if (iaeiy.dogeModeOn = false){
-//     var RLY = prompt("Are you shure? Type 'wow' to confirm")
-//     if (RLY ==="wow"){
-//       iaeiy.dogeModeOn = true
-//       iaeiy.dogeModeActivate();
-//     }
-//   }
-// }
-
-// iaeiy.dogeModeActivate = function(){
-//   $("div").css("font-family","Comic Sans MS")
-// }

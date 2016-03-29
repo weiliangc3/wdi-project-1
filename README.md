@@ -52,7 +52,6 @@ Making an endless mode and creating randomised enemies was an early design decis
 
 While the game is quite fun without karma, I decided that adding a reward system to the game would add an extra level of tension and fun. Visually, karma was designed to look appealing, and provide clear positive auditory and visual feedback to the player. A bar was added simply to help reinforce the positive feedback, and karma decay was introduced to maintain tension of collecting the gold karma.
 
-
 ##Resources
 Music is from Music : Pamgaea Kevin MacLeod (incompetech.com)
 Licensed under Creative Commons: By Attribution 3.0 License
