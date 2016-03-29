@@ -12,6 +12,8 @@ Playing blocks that move is simple. Use your arrow keys or WSAD to move the blue
 
 Points are gained the longer you stay alive, and the more karma you collect, the faster you gain points. The karma bonus goes up to a maximum of 10x, so sometimes it's worth the risk to get that gold karma block.
 
+The green bar on the right represents your health, and the yellow bar represents the amount of karma active. Karma dissipates over time, so don't stop collecting them!
+
 There are two modes to the game, selectable at the top right hand corner- Challenge mode and Endless.
 
 In Challenge mode, your aim is to achieve a certain amount of points to progress to the next level, where you'll face more, faster, and bigger red boxes. There are 4 levels, but the last level is a true challenge of your reactions and planning.
